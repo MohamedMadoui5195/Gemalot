@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alislamiah-AI</title>
+<title>Gemalot</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -16,7 +16,7 @@ body {
     overflow: hidden;
 }
 
-/* الشريط العلوي بالتدرج اللوني وبدون زر عودة */
+/* الشريط العلوي المطابق للصورة تماماً بدون زر عودة وباسم Gemalot */
 .header {
     height: 65px;
     background: linear-gradient(90deg, #facc15, #f97316, #22c55e, #3b82f6);
@@ -140,12 +140,12 @@ body {
 <body>
 
 <div class="header">
-    <div class="header-title">Alislamiah-AI</div>
+    <div class="header-title">Gemalot</div>
 </div>
 
 <div class="chat-container" id="chatContainer">
     <div class="welcome-box" id="welcomeBox">
-        <h1>Alislamiah-AI</h1>
+        <h1>Gemalot</h1>
         <p>كيف يمكنك مساعدتك؟</p>
     </div>
 </div>
@@ -158,9 +158,9 @@ body {
 </div>
 
 <script>
-/* قاعدة البيانات الفقهية الشاملة */
+/* قاعدة البيانات الفقهية الشاملة لتطبيق Gemalot */
 const chatKnowledge = [
-    { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً", "مرحبا"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Alislamiah-AI، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
+    { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً", "مرحبا", "جيت هاب"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Gemalot، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
     { roots: ["إلى اللقاء", "مع السلامة", "سلام", "وداعاً"], reply: "في أمان الله ورعايته! أتمنى أن أكون قد أفدتك، وتسعدني عودتك دائماً." },
     { roots: ["سجود السهو", "سجدتي السهو"], reply: "سجود السهو مشروع لجبر ما حصل في الصلاة من زيادة أو نقص، ويكون قبل السلام أو بعده." },
     { roots: ["سجود التلاوة", "سجدة القرآن"], reply: "يسجد القارئ والمستمع سجود التلاوة عند مروره بآية سجود، ويكبر لها دون تشهد أو تسليم." },
