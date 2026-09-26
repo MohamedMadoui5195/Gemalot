@@ -6,57 +6,27 @@
 <title>Gemalot</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;height:100%;}
-body{font-family:Arial,sans-serif;background:#060c16;color:#222;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:background 0.5s ease;}
+html,body{width:100%;height:100%;overflow:hidden;}
+body{font-family:Arial,sans-serif;background:#0b0f19;color:#fff;display:flex;flex-direction:column;height:100vh;}
 
-/* تأثير التوهج الملون الحركي مثل جيميناي عند الضغط على زر الإرسال بألوان الشعار الكاملة */
-body.gemini-glow::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at center, rgba(250, 204, 21, 0.25), rgba(249, 115, 22, 0.2), rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2), transparent 80%);
-    animation: geminiPulse 1.5s ease-in-out infinite;
-    z-index: 5;
-    pointer-events: none;
-}
+.header{height:60px;display:flex;align-items:center;justify-content:center;background:#0b0f19;border-bottom:1px solid #1f293d;flex-shrink:0;}
+.header-title{font-size:20px;font-weight:bold;color:#38bdf8;}
 
-@keyframes geminiPulse {
-    0% { opacity: 0.3; transform: scale(0.95); }
-    50% { opacity: 1; transform: scale(1.05); filter: hue-rotate(15deg); }
-    100% { opacity: 0.3; transform: scale(0.95); }
-}
-
-.header, .chat, .input-area {
-    position: relative;
-    z-index: 10;
-}
-
-/* الهيدر مع إظهار ألوان الشعار الكاملة بوضوح */
-.header{height:68px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, #facc15 0%, #f97316 35%, #22c55e 70%, #3b82f6 100%);color:white;z-index:10;flex-shrink:0;}
-
-.header-title{font-size:23px;font-weight:bold;}
-
-.chat{flex:1;overflow-y:auto;padding:22px 14px;background:#060c16;}
-.message{max-width:85%;padding:14px 17px;margin:13px auto;font-size:15px;line-height:1.8;border-radius:21px;word-wrap:break-word;white-space:pre-line;}
-
-/* رسائل المستخدم بتدرج ألوان الشعار الكاملة */
-.user{margin-right:auto;margin-left:0;color:white;background:linear-gradient(135deg, #facc15, #f97316, #22c55e, #3b82f6);border-bottom-right-radius:5px;}
-.ai{margin-left:auto;margin-right:0;background:#ffffff;color:#202020;border-bottom-left-radius:5px;}
-.ai a{color:#0066cc;text-decoration:underline;font-weight:bold;}
-
+.chat{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;justify-content:flex-start;}
 .welcome{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
-.welcome h1{font-size:32px;margin-bottom:8px;color:#fff;}
-.welcome p{color:#888;font-size:15px;}
+.welcome h1{font-size:28px;margin-bottom:10px;color:#ffffff;font-weight:700;}
+.welcome p{color:#9ca3af;font-size:16px;}
 
-.input-area{height:82px;padding:13px 12px;background:#060c16;border-top:1px solid #17283e;flex-shrink:0;}
-.input-box{width:100%;max-width:800px;margin:0 auto;height:55px;display:flex;align-items:center;border-radius:30px;background:#fff;padding:4px;}
-textarea{flex:1;height:45px;resize:none;border:none;outline:none;background:transparent;padding:11px 16px;font-size:16px;color:#222;direction:rtl;}
+.message{max-width:85%;padding:12px 16px;margin:10px 0;font-size:15px;line-height:1.6;border-radius:12px;word-wrap:break-word;white-space:pre-line;}
+.user{background:#2563eb;color:#fff;align-self:flex-start;margin-right:auto;}
+.ai{background:#1e293b;color:#f3f4f6;align-self:flex-end;margin-left:auto;}
+.ai a{color:#38bdf8;text-decoration:underline;font-weight:bold;}
 
-/* زر الإرسال بتدرج ألوان الشعار الكاملة */
-.send{width:45px;height:45px;border:none;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #facc15, #f97316, #22c55e, #3b82f6);color:white;font-size:14px;font-weight:bold;flex-shrink:0;}
+.input-area{padding:15px;background:#0b0f19;border-top:1px solid #1f293d;flex-shrink:0;}
+.input-box{width:100%;max-width:700px;margin:0 auto;height:50px;display:flex;align-items:center;border-radius:25px;background:#1e293b;padding:4px 6px;border:1px solid #334155;}
+textarea{flex:1;height:40px;resize:none;border:none;outline:none;background:transparent;padding:9px 12px;font-size:15px;color:#fff;direction:rtl;}
+
+.send{width:40px;height:40px;border:none;border-radius:50%;cursor:pointer;background:#2563eb;color:white;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -68,22 +38,21 @@ textarea{flex:1;height:45px;resize:none;border:none;outline:none;background:tran
 <div class="chat" id="chat">
     <div class="welcome" id="welcome">
         <h1>Gemalot</h1>
-        <p>كيف يمكنك مساعدتك؟</p>
+        <p>كيف يمكنني مساعدتك؟</p>
     </div>
 </div>
 
 <div class="input-area">
     <div class="input-box">
         <textarea id="message" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
-        <button class="send" id="sendBtn">إرسال</button>
+        <button class="send" id="sendBtn">➤</button>
     </div>
 </div>
 
-<!-- جلب صفحة media.html البرمجية التي تحتوي على جزء من قاعدة البيانات والروابط -->
 <script src="media.html"></script>
 
 <script>
-// قاعدة البيانات المحلية في صفحة التشات (الأحكام الدينية والشرعية)
+// قاعدة البيانات المحلية الشاملة للتشات (الأحكام الدينية والشرعية)
 const chatKnowledge = [
     { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Gemalot، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
     { roots: ["إلى اللقاء", "مع السلامة", "سلام", "باي", "وداعاً"], reply: "في أمان الله ورعايته! أتمنى أن أكون قد أفدتك، وتسعدني عودتك دائماً." },
@@ -189,14 +158,13 @@ const chat = document.getElementById('chat');
 const messageInput = document.getElementById('message');
 const sendBtn = document.getElementById('sendBtn');
 const welcome = document.getElementById('welcome');
-const body = document.body;
 
 function addMessage(text, sender) {
     if (welcome) welcome.style.display = 'none';
     const div = document.createElement('div');
     div.className = `message ${sender}`;
     if (sender === 'ai') {
-        div.innerHTML = text; 
+        div.innerHTML = text; // لدعم روابط HTML المستدعاة من media.html
     } else {
         div.textContent = text;
     }
@@ -207,6 +175,7 @@ function addMessage(text, sender) {
 function getBotReply(userText) {
     userText = userText.trim().toLowerCase();
 
+    // دمج مصفوفة الردود المحلية مع البيانات الواردة من ملف media.html الخارجي
     const externalMediaDatabase = (typeof window.mediaDatabase !== 'undefined') ? window.mediaDatabase : [];
     const allKnowledge = [...chatKnowledge, ...externalMediaDatabase];
 
@@ -217,24 +186,19 @@ function getBotReply(userText) {
             }
         }
     }
-    return "تعذر تحميل الإجابة";
+    return "عذراً، لم أتمكن من العثور على إجابة لهذا السؤال. يمكنك تجربة سؤال آخر.";
 }
 
 function handleSend() {
     const text = messageInput.value;
     if (!text.trim()) return;
+    
     addMessage(text, 'user');
     messageInput.value = '';
-
-    // تفعيل تأثير التوهج الملون الحركي مثل جيميناي عند الإرسال
-    body.classList.add('gemini-glow');
 
     setTimeout(() => {
         const reply = getBotReply(text);
         addMessage(reply, 'ai');
-        
-        // إيقاف التوهج بعد ظهور رد الذكاء الاصطناعي
-        body.classList.remove('gemini-glow');
     }, 400);
 }
 
