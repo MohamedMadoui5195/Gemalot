@@ -5,27 +5,135 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gemalot</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;height:100%;}
-body{font-family:Arial,sans-serif;background:#05070b;color:#222;overflow:hidden;display:flex;flex-direction:column;}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #0b0f19;
+    color: #ffffff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
 
-.header{height:68px;display:flex;align-items:center;justify-content:center;background:rgba(5, 7, 11, 0.9);backdrop-filter: blur(10px);border-bottom:1px solid rgba(255,255,255,0.08);z-index:10;flex-shrink:0;}
-.header-title{font-size:25px;font-weight:bold;background:linear-gradient(135deg, #facc15 0%, #f97316 35%, #22c55e 70%, #38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+/* الهيدر العلوي مطابق تماماً للصورة الثانية مع تغيير الهوية */
+.header {
+    height: 60px;
+    background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0 16px;
+    flex-shrink: 0;
+}
 
-.chat{flex:1;overflow-y:auto;padding:22px 14px;background:#05070b;}
-.message{max-width:85%;padding:14px 17px;margin:13px auto;font-size:15px;line-height:1.8;border-radius:21px;word-wrap:break-word;white-space:pre-line;}
-.user{margin-right:auto;margin-left:0;color:#05070b;background:linear-gradient(135deg, #f97316, #facc15);border-bottom-right-radius:5px;font-weight:bold;}
-.ai{margin-left:auto;margin-right:0;background:#111622;color:#f3f4f6;border:1px solid rgba(255,255,255,0.06);border-bottom-left-radius:5px;}
-.ai a{color:#38bdf8;text-decoration:underline;font-weight:bold;}
+.header-title {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+}
 
-.welcome{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
-.welcome h1{font-size:36px;margin-bottom:8px;background:linear-gradient(135deg, #facc15, #f97316, #22c55e, #38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:bold;}
-.welcome p{color:#8b949e;font-size:16px;}
+/* منطقة المحادثة والترحيب */
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 
-.input-area{height:82px;padding:13px 12px;background:rgba(5, 7, 11, 0.9);backdrop-filter: blur(10px);border-top:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
-.input-box{width:100%;max-width:800px;margin:0 auto;height:55px;display:flex;align-items:center;border-radius:30px;background:#111622;padding:4px;border:1px solid rgba(255,255,255,0.1);}
-textarea{flex:1;height:45px;resize:none;border:none;outline:none;background:transparent;padding:11px 16px;font-size:16px;color:#fff;direction:rtl;}
-.send{width:45px;height:45px;border:none;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #22c55e, #38bdf8);color:white;font-size:15px;font-weight:bold;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.welcome-box h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.welcome-box p {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* الرسائل داخل المحادثة */
+.message {
+    max-width: 85%;
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    text-align: right;
+}
+.message.user {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    color: #fff;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+}
+.message.ai {
+    background: #1f2937;
+    color: #f3f4f6;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
+
+/* شريط الإدخال السفلي المطابق تماماً للصورة الثانية */
+.input-area {
+    padding: 12px 16px;
+    background-color: #0b0f19;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.input-wrapper {
+    width: 100%;
+    max-width: 700px;
+    background: #161e2e;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 6px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.input-wrapper textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 14px;
+    resize: none;
+    max-height: 100px;
+    padding: 8px 0;
+    direction: rtl;
+}
+
+.input-wrapper textarea::placeholder {
+    color: #6b7280;
+}
+
+.send-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-right: 8px;
+    flex-shrink: 0;
+    font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -34,17 +142,17 @@ textarea{flex:1;height:45px;resize:none;border:none;outline:none;background:tran
     <div class="header-title">Gemalot</div>
 </div>
 
-<div class="chat" id="chat">
-    <div class="welcome" id="welcome">
+<div class="chat-container" id="chatContainer">
+    <div class="welcome-box" id="welcomeBox">
         <h1>Gemalot</h1>
         <p>كيف يمكنك مساعدتك؟</p>
     </div>
 </div>
 
 <div class="input-area">
-    <div class="input-box">
-        <textarea id="message" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
-        <button class="send" id="sendBtn">➤</button>
+    <div class="input-wrapper">
+        <textarea id="userInput" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
+        <button class="send-btn" id="sendBtn">إرسال</button>
     </div>
 </div>
 
@@ -152,56 +260,48 @@ const chatKnowledge = [
     { roots: ["أحكام الرضا"], reply: "عجباً لأمر المؤمن إن أمره كله خير، إن أصابته سرّاء شكر فكان خيراً له." }
 ];
 
-const chat = document.getElementById('chat');
-const messageInput = document.getElementById('message');
+const chatContainer = document.getElementById('chatContainer');
+const welcomeBox = document.getElementById('welcomeBox');
+const userInput = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
-const welcome = document.getElementById('welcome');
 
-function addMessage(text, sender) {
-    if (welcome) welcome.style.display = 'none';
-    const div = document.createElement('div');
-    div.className = `message ${sender}`;
-    if (sender === 'ai') {
-        div.innerHTML = text;
-    } else {
-        div.textContent = text;
-    }
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
+function appendMessage(text, sender) {
+    if (welcomeBox) welcomeBox.style.display = 'none';
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${sender}`;
+    msgDiv.textContent = text;
+    chatContainer.appendChild(msgDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-function getBotReply(userText) {
-    userText = userText.trim().toLowerCase();
-    const externalMediaDatabase = (typeof window.mediaDatabase !== 'undefined') ? window.mediaDatabase : [];
-    const allKnowledge = [...chatKnowledge, ...externalMediaDatabase];
-
-    for (let item of allKnowledge) {
-        for (let root of item.roots) {
-            if (userText.includes(root.toLowerCase())) {
-                return item.reply;
-            }
-        }
-    }
-    return "عذراً، لم أتمكن من العثور على إجابة لهذا السؤال.";
-}
-
-function handleSend() {
-    const text = messageInput.value;
+function processMessage() {
+    const text = userInput.value;
     if (!text.trim()) return;
-    addMessage(text, 'user');
-    messageInput.value = '';
+    appendMessage(text, 'user');
+    userInput.value = '';
 
     setTimeout(() => {
-        const reply = getBotReply(text);
-        addMessage(reply, 'ai');
-    }, 400);
+        let reply = "عذراً، لم أتمكن من العثور على إجابة لهذا السؤال.";
+        const externalMediaDatabase = (typeof window.mediaDatabase !== 'undefined') ? window.mediaDatabase : [];
+        const fullDb = [...chatKnowledge, ...externalMediaDatabase];
+        
+        for (let item of fullDb) {
+            for (let root of item.roots) {
+                if (text.trim().toLowerCase().includes(root.toLowerCase())) {
+                    reply = item.reply;
+                    break;
+                }
+            }
+        }
+        appendMessage(reply, 'ai');
+    }, 300);
 }
 
-sendBtn.addEventListener('click', handleSend);
-messageInput.addEventListener('keydown', (e) => {
+sendBtn.addEventListener('click', processMessage);
+userInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        handleSend();
+        processMessage();
     }
 });
 </script>
