@@ -9,7 +9,7 @@
 html,body{width:100%;height:100%;}
 body{font-family:Arial,sans-serif;background:#060c16;color:#222;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:background 0.5s ease;}
 
-/* تأثير التوهج الملون الحركي عند الضغط على زر الإرسال بألوان الصورة الجديدة */
+/* تأثير التوهج الملون الحركي مثل جيميناي عند الضغط على زر الإرسال بألوان الشعار الكاملة */
 body.gemini-glow::before {
     content: '';
     position: absolute;
@@ -34,15 +34,15 @@ body.gemini-glow::before {
     z-index: 10;
 }
 
-/* تعديل تدرج ألوان الهيدر بألوان شعارك الجديد (أصفر، برتقالي، أخضر، أزرق) */
-.header{height:68px;display:flex;align-items:center;justify-content:center;background:linear-gradient(120deg, #facc15, #f97316, #22c55e, #3b82f6);color:white;z-index:10;flex-shrink:0;}
+/* الهيدر مع إظهار ألوان الشعار الكاملة بوضوح */
+.header{height:68px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, #facc15 0%, #f97316 35%, #22c55e 70%, #3b82f6 100%);color:white;z-index:10;flex-shrink:0;}
 
 .header-title{font-size:23px;font-weight:bold;}
 
 .chat{flex:1;overflow-y:auto;padding:22px 14px;background:#060c16;}
 .message{max-width:85%;padding:14px 17px;margin:13px auto;font-size:15px;line-height:1.8;border-radius:21px;word-wrap:break-word;white-space:pre-line;}
 
-/* تعديل تدرج رسائل المستخدم بألوان الشعار الجديد */
+/* رسائل المستخدم بتدرج ألوان الشعار الكاملة */
 .user{margin-right:auto;margin-left:0;color:white;background:linear-gradient(135deg, #facc15, #f97316, #22c55e, #3b82f6);border-bottom-right-radius:5px;}
 .ai{margin-left:auto;margin-right:0;background:#ffffff;color:#202020;border-bottom-left-radius:5px;}
 .ai a{color:#0066cc;text-decoration:underline;font-weight:bold;}
@@ -55,14 +55,13 @@ body.gemini-glow::before {
 .input-box{width:100%;max-width:800px;margin:0 auto;height:55px;display:flex;align-items:center;border-radius:30px;background:#fff;padding:4px;}
 textarea{flex:1;height:45px;resize:none;border:none;outline:none;background:transparent;padding:11px 16px;font-size:16px;color:#222;direction:rtl;}
 
-/* تعديل ألوان زر الإرسال لتطابق ألوان شعارك الجديد */
-.send{width:45px;height:45px;border:none;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #facc15, #f97316, #22c55e);color:white;font-size:14px;font-weight:bold;flex-shrink:0;}
+/* زر الإرسال بتدرج ألوان الشعار الكاملة */
+.send{width:45px;height:45px;border:none;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #facc15, #f97316, #22c55e, #3b82f6);color:white;font-size:14px;font-weight:bold;flex-shrink:0;}
 </style>
 </head>
 <body>
 
 <div class="header">
-<button onclick="window.history.back()" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer;">⬅️ العودة</button>
     <div class="header-title">Gemalot</div>
 </div>
 
