@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: Arial, sans-serif;
     background-color: #0b0f19;
     color: #ffffff;
     height: 100vh;
@@ -16,22 +16,31 @@ body {
     overflow: hidden;
 }
 
-/* الهيدر العلوي مطابق تماماً للصورة الثانية مع تغيير الهوية */
+/* الشريط العلوي المطابق للصورة */
 .header {
-    height: 60px;
-    background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6);
+    height: 65px;
+    background: linear-gradient(90deg, #facc15, #f97316, #22c55e, #3b82f6);
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: relative;
+    justify-content: space-between;
     padding: 0 16px;
     flex-shrink: 0;
 }
 
 .header-title {
     color: #ffffff;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
 }
 
 /* منطقة المحادثة والترحيب */
@@ -47,15 +56,15 @@ body {
 }
 
 .welcome-box h1 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: #ffffff;
 }
 
 .welcome-box p {
     color: #9ca3af;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 /* الرسائل داخل المحادثة */
@@ -70,19 +79,21 @@ body {
     text-align: right;
 }
 .message.user {
-    background: linear-gradient(135deg, #ec4899, #8b5cf6);
-    color: #fff;
+    background: linear-gradient(90deg, #facc15, #f97316, #22c55e, #3b82f6);
+    color: #ffffff;
+    font-weight: bold;
     margin-right: auto;
     border-bottom-left-radius: 4px;
 }
 .message.ai {
-    background: #1f2937;
-    color: #f3f4f6;
+    background: #ffffff;
+    color: #111827;
     margin-left: auto;
     border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* شريط الإدخال السفلي المطابق تماماً للصورة الثانية */
+/* شريط الإدخال السفلي المطابق للصورة */
 .input-area {
     padding: 12px 16px;
     background-color: #0b0f19;
@@ -94,12 +105,12 @@ body {
 .input-wrapper {
     width: 100%;
     max-width: 700px;
-    background: #161e2e;
-    border-radius: 30px;
+    background: #ffffff;
+    border-radius: 35px;
     display: flex;
     align-items: center;
-    padding: 6px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 4px 6px 4px 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .input-wrapper textarea {
@@ -107,7 +118,7 @@ body {
     background: transparent;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: #111827;
     font-size: 14px;
     resize: none;
     max-height: 100px;
@@ -116,23 +127,23 @@ body {
 }
 
 .input-wrapper textarea::placeholder {
-    color: #6b7280;
+    color: #9ca3af;
 }
 
 .send-btn {
-    width: 38px;
-    height: 38px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    background: linear-gradient(90deg, #facc15, #f97316, #22c55e);
     border: none;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    margin-right: 8px;
     flex-shrink: 0;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -140,6 +151,7 @@ body {
 
 <div class="header">
     <div class="header-title">Gemalot</div>
+    <button class="back-btn">العودة ⬅</button>
 </div>
 
 <div class="chat-container" id="chatContainer">
