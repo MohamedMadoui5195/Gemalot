@@ -26,7 +26,7 @@
             transition: background 0.5s ease;
         }
 
-        /* تأثير لمعان الشاشة مثل جيميناي عند الإرسال */
+        /* تأثير التوهج اللوني مثل جيميناي عند الإرسال */
         body.gemini-glow::before {
             content: '';
             position: absolute;
@@ -34,16 +34,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.25), rgba(16, 185, 129, 0.2), rgba(245, 158, 11, 0.15), rgba(236, 72, 153, 0.2), transparent 80%);
-            animation: geminiPulse 1.8s ease-in-out infinite;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.25), rgba(245, 158, 11, 0.2), rgba(239, 68, 68, 0.2), transparent 75%);
+            animation: geminiPulse 1.5s ease-in-out infinite;
             z-index: 1;
             pointer-events: none;
         }
 
         @keyframes geminiPulse {
-            0% { opacity: 0.3; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.05); filter: hue-rotate(20deg); }
-            100% { opacity: 0.3; transform: scale(0.95); }
+            0% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); filter: hue-rotate(15deg); }
+            100% { opacity: 0.4; transform: scale(0.95); }
         }
 
         .header, .main-content, .footer {
@@ -60,17 +60,17 @@
             border-bottom: 1px solid #1f2937;
         }
 
+        /* اسم التطبيق بالتدرج الجديد المستوحى من صورتك */
         .app-title {
             font-size: 24px;
             font-weight: bold;
-            /* ألوان الصورة الخاصة بك بدقة */
-            background: linear-gradient(135deg, #2b7de9, #12bc8e, #e8b31a, #ea580c, #db2777);
+            background: linear-gradient(135deg, #3b82f6, #10b981, #f59e0b, #ef4444);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .back-btn {
-            background: linear-gradient(135deg, #2b7de9, #ea580c);
+            background: linear-gradient(135deg, #3b82f6, #ef4444);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -116,11 +116,6 @@
             align-items: center;
             padding: 8px 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            transition: border-color 0.3s;
-        }
-
-        .chat-container:focus-within {
-            border-color: #12bc8e;
         }
 
         .chat-input {
@@ -138,9 +133,9 @@
             color: #6b7280;
         }
 
+        /* زر الإرسال بألوان التدرج الجديدة الخاصة بالصورة */
         .send-btn {
-            /* ألوان التدرج المستخرجة من صورتك */
-            background: linear-gradient(135deg, #2b7de9, #12bc8e, #e8b31a, #ea580c, #db2777);
+            background: linear-gradient(135deg, #3b82f6, #10b981, #f59e0b, #ef4444);
             color: white;
             border: none;
             padding: 10px 22px;
@@ -189,18 +184,16 @@
         const body = document.body;
 
         sendBtn.addEventListener('click', () => {
-            if (chatInput.value.trim() !== "" || true) { // مفعل حتى لو الحقل فارغ للتجربة
-                // تفعيل تأثير اللمعان المتحرك مثل جيميناي
-                body.classList.add('gemini-glow');
-                
-                // إيقاف اللمعان تلقائياً بعد 4 ثوانٍ (أو يمكنك جعلها مستمرة حتى يتلقى رداً)
-                setTimeout(() => {
-                    body.classList.remove('gemini-glow');
-                }, 4000);
+            // تفعيل التوهج اللوني عند الضغط على زر الإرسال
+            body.classList.add('gemini-glow');
+            
+            // إيقاف التوهج تلقائياً بعد 3.5 ثانية (يمكنك تعديل المدة)
+            setTimeout(() => {
+                body.classList.remove('gemini-glow');
+            }, 3500);
 
-                // تفريغ الحقل بعد الإرسال
-                chatInput.value = "";
-            }
+            // تفريغ حقل النص
+            chatInput.value = "";
         });
     </script>
 
