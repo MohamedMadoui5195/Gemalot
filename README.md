@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -7,26 +7,37 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100%;height:100%;overflow:hidden;}
-body{font-family:Arial,sans-serif;background:#0b0f19;color:#fff;display:flex;flex-direction:column;height:100vh;}
+body{font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;background:#05070b;color:#fff;display:flex;flex-direction:column;height:100vh;}
 
-.header{height:60px;display:flex;align-items:center;justify-content:center;background:#0b0f19;border-bottom:1px solid #1f293d;flex-shrink:0;}
-.header-title{font-size:20px;font-weight:bold;color:#38bdf8;}
+.header{height:65px;display:flex;align-items:center;justify-content:center;background:rgba(5, 7, 11, 0.85);backdrop-filter: blur(10px);border-bottom:1px solid rgba(255,255,255,0.08);flex-shrink:0;z-index:10;}
+.header-title{font-size:24px;font-weight:800;letter-spacing:0.5px;background:linear-gradient(135deg, #facc15 0%, #f97316 35%, #22c55e 70%, #38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow: 0 0 30px rgba(56,189,248,0.2);}
 
-.chat{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;justify-content:flex-start;}
-.welcome{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
-.welcome h1{font-size:28px;margin-bottom:10px;color:#ffffff;font-weight:700;}
-.welcome p{color:#9ca3af;font-size:16px;}
+.chat{flex:1;overflow-y:auto;padding:25px;display:flex;flex-direction:column;justify-content:flex-start;scroll-behavior: smooth;}
+.welcome{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;animation: fadeIn 0.8s ease-out;}
+.welcome h1{font-size:36px;margin-bottom:12px;font-weight:800;background:linear-gradient(135deg, #facc15, #f97316, #22c55e, #38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.welcome p{color:#8b949e;font-size:16px;font-weight:400;}
 
-.message{max-width:85%;padding:12px 16px;margin:10px 0;font-size:15px;line-height:1.6;border-radius:12px;word-wrap:break-word;white-space:pre-line;}
-.user{background:#2563eb;color:#fff;align-self:flex-start;margin-right:auto;}
-.ai{background:#1e293b;color:#f3f4f6;align-self:flex-end;margin-left:auto;}
+.message{max-width:82%;padding:14px 18px;margin:12px 0;font-size:15px;line-height:1.7;border-radius:16px;word-wrap:break-word;white-space:pre-line;animation: slideUp 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);box-shadow: 0 4px 15px rgba(0,0,0,0.2);}
+.user{background:linear-gradient(135deg, #f97316 0%, #facc15 100%);color:#05070b;font-weight:700;align-self:flex-start;margin-right:auto;border-bottom-left-radius:4px;}
+.ai{background:#111622;color:#f3f4f6;align-self:flex-end;margin-left:auto;border:1px solid rgba(255,255,255,0.06);border-bottom-right-radius:4px;}
 .ai a{color:#38bdf8;text-decoration:underline;font-weight:bold;}
 
-.input-area{padding:15px;background:#0b0f19;border-top:1px solid #1f293d;flex-shrink:0;}
-.input-box{width:100%;max-width:700px;margin:0 auto;height:50px;display:flex;align-items:center;border-radius:25px;background:#1e293b;padding:4px 6px;border:1px solid #334155;}
-textarea{flex:1;height:40px;resize:none;border:none;outline:none;background:transparent;padding:9px 12px;font-size:15px;color:#fff;direction:rtl;}
+.input-area{padding:18px;background:rgba(5, 7, 11, 0.9);backdrop-filter: blur(10px);border-top:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
+.input-box{width:100%;max-width:750px;margin:0 auto;height:54px;display:flex;align-items:center;border-radius:28px;background:#111622;padding:4px 6px;border:1px solid rgba(255,255,255,0.1);box-shadow: 0 8px 25px rgba(0,0,0,0.4);transition: all 0.3s ease;}
+.input-box:focus-within{border-color:#38bdf8;box-shadow: 0 0 15px rgba(56,189,248,0.25);}
+textarea{flex:1;height:42px;resize:none;border:none;outline:none;background:transparent;padding:10px 15px;font-size:15px;color:#fff;direction:rtl;}
 
-.send{width:40px;height:40px;border:none;border-radius:50%;cursor:pointer;background:#2563eb;color:white;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.send{width:44px;height:44px;border:none;border-radius:50%;cursor:pointer;background:linear-gradient(135deg, #22c55e 0%, #38bdf8 100%);color:white;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition: transform 0.2s ease, opacity 0.2s ease;}
+.send:hover{transform: scale(1.08);opacity: 0.9;}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -38,13 +49,13 @@ textarea{flex:1;height:40px;resize:none;border:none;outline:none;background:tran
 <div class="chat" id="chat">
     <div class="welcome" id="welcome">
         <h1>Gemalot</h1>
-        <p>كيف يمكنني مساعدتك؟</p>
+        <p>كيف يمكنني مساعدتك اليوم؟</p>
     </div>
 </div>
 
 <div class="input-area">
     <div class="input-box">
-        <textarea id="message" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
+        <textarea id="message" placeholder="اكتب سؤالك الشرعي أو الفقهي هنا..." rows="1"></textarea>
         <button class="send" id="sendBtn">➤</button>
     </div>
 </div>
@@ -52,7 +63,7 @@ textarea{flex:1;height:40px;resize:none;border:none;outline:none;background:tran
 <script src="media.html"></script>
 
 <script>
-// قاعدة البيانات المحلية الشاملة للتشات (الأحكام الدينية والشرعية)
+// قاعدة البيانات الشاملة والكاملة للردود والأحكام الشرعية
 const chatKnowledge = [
     { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Gemalot، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
     { roots: ["إلى اللقاء", "مع السلامة", "سلام", "باي", "وداعاً"], reply: "في أمان الله ورعايته! أتمنى أن أكون قد أفدتك، وتسعدني عودتك دائماً." },
@@ -164,7 +175,7 @@ function addMessage(text, sender) {
     const div = document.createElement('div');
     div.className = `message ${sender}`;
     if (sender === 'ai') {
-        div.innerHTML = text; // لدعم روابط HTML المستدعاة من media.html
+        div.innerHTML = text;
     } else {
         div.textContent = text;
     }
@@ -174,8 +185,6 @@ function addMessage(text, sender) {
 
 function getBotReply(userText) {
     userText = userText.trim().toLowerCase();
-
-    // دمج مصفوفة الردود المحلية مع البيانات الواردة من ملف media.html الخارجي
     const externalMediaDatabase = (typeof window.mediaDatabase !== 'undefined') ? window.mediaDatabase : [];
     const allKnowledge = [...chatKnowledge, ...externalMediaDatabase];
 
