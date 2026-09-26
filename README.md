@@ -1,215 +1,208 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alislamiah-AI</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;height:100%;}
-body{font-family:Arial,sans-serif;background:#060c16;color:#222;overflow:hidden;display:flex;flex-direction:column;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemalot</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
 
-.header{height:68px;display:flex;align-items:center;justify-content:center;background:linear-gradient(120deg,#833ab4,#c13584,#e1306c,#f77737);color:white;z-index:10;flex-shrink:0;}
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.5s ease;
+        }
 
-.header-title{font-size:23px;font-weight:bold;}
+        /* تأثير لمعان الشاشة مثل جيميناي عند الإرسال */
+        body.gemini-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.25), rgba(16, 185, 129, 0.2), rgba(245, 158, 11, 0.15), rgba(236, 72, 153, 0.2), transparent 80%);
+            animation: geminiPulse 1.8s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-.chat{flex:1;overflow-y:auto;padding:22px 14px;background:#060c16;}
-.message{max-width:85%;padding:14px 17px;margin:13px auto;font-size:15px;line-height:1.8;border-radius:21px;word-wrap:break-word;white-space:pre-line;}
-.user{margin-right:auto;margin-left:0;color:white;background:linear-gradient(135deg,#fa7e1e,#e1306c,#833ab4);border-bottom-right-radius:5px;}
-.ai{margin-left:auto;margin-right:0;background:#ffffff;color:#202020;border-bottom-left-radius:5px;}
-.ai a{color:#0066cc;text-decoration:underline;font-weight:bold;}
+        @keyframes geminiPulse {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); filter: hue-rotate(20deg); }
+            100% { opacity: 0.3; transform: scale(0.95); }
+        }
 
-.welcome{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
-.welcome h1{font-size:32px;margin-bottom:8px;color:#fff;}
-.welcome p{color:#888;font-size:15px;}
+        .header, .main-content, .footer {
+            position: relative;
+            z-index: 2;
+        }
 
-.input-area{height:82px;padding:13px 12px;background:#060c16;border-top:1px solid #17283e;flex-shrink:0;}
-.input-box{width:100%;max-width:800px;margin:0 auto;height:55px;display:flex;align-items:center;border-radius:30px;background:#fff;padding:4px;}
-textarea{flex:1;height:45px;resize:none;border:none;outline:none;background:transparent;padding:11px 16px;font-size:16px;color:#222;direction:rtl;}
-.send{width:45px;height:45px;border:none;border-radius:50%;cursor:pointer;background:linear-gradient(135deg,#833ab4,#e1306c);color:white;font-size:14px;font-weight:bold;flex-shrink:0;}
-</style>
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            /* ألوان الصورة الخاصة بك بدقة */
+            background: linear-gradient(135deg, #2b7de9, #12bc8e, #e8b31a, #ea580c, #db2777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #2b7de9, #ea580c);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            gap: 15px;
+        }
+
+        .main-heading {
+            font-size: 28px;
+            font-weight: 600;
+            color: #f3f4f6;
+        }
+
+        .sub-text {
+            font-size: 16px;
+            color: #9ca3af;
+            margin-bottom: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            transition: border-color 0.3s;
+        }
+
+        .chat-container:focus-within {
+            border-color: #12bc8e;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 16px;
+            padding: 10px;
+            outline: none;
+            text-align: right;
+        }
+
+        .chat-input::placeholder {
+            color: #6b7280;
+        }
+
+        .send-btn {
+            /* ألوان التدرج المستخرجة من صورتك */
+            background: linear-gradient(135deg, #2b7de9, #12bc8e, #e8b31a, #ea580c, #db2777);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #4b5563;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="header">
-<button onclick="window.history.back()" style="background: rgba(255,255,255,0.2); color: white; border: none; padding: 6px 14px; border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer;">⬅️ العودة</button>
-    <div class="header-title">Alislamiah-AI</div>
-</div>
-
-<div class="chat" id="chat">
-    <div class="welcome" id="welcome">
-        <h1>Alislamiah-AI</h1>
-        <p>كيف يمكنك مساعدتك؟</p>
+    <div class="header">
+        <a href="#" class="back-btn">العودة ⬅</a>
+        <div class="app-title">Gemalot</div>
     </div>
-</div>
 
-<div class="input-area">
-    <div class="input-box">
-        <textarea id="message" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
-        <button class="send" id="sendBtn">إرسال</button>
+    <div class="main-content">
+        <h1 class="main-heading">Gemalot</h1>
+        <p class="sub-text">كيف يمكنك مساعدةتك؟</p>
+
+        <div class="chat-container">
+            <button class="send-btn" id="sendBtn">إرسال</button>
+            <input type="text" class="chat-input" id="chatInput" placeholder="اكتب سؤالك هنا...">
+        </div>
     </div>
-</div>
 
-<!-- جلب صفحة media.html البرمجية التي تحتوي على جزء من قاعدة البيانات والروابط -->
-<script src="media.html"></script>
+    <div class="footer">
+        Gemalot &copy; 2026
+    </div>
 
-<script>
-// قاعدة البيانات المحلية في صفحة التشات (الأحكام الدينية والشرعية)
-const chatKnowledge = [
-    { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Alislamiah-AI، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
-    { roots: ["إلى اللقاء", "مع السلامة", "سلام", "باي", "وداعاً"], reply: "في أمان الله ورعايته! أتمنى أن أكون قد أفدتك، وتسعدني عودتك دائماً." },
-    { roots: ["أحكام سجدتي السهو", "سجود السهو"], reply: "سجود السهو مشروع لجبر ما حصل في الصلاة من زيادة أو نقص، ويكون قبل السلام أو بعده." },
-    { roots: ["أحكام سجود التلاوة", "سجدة القرآن"], reply: "يسجد القارئ والمستمع سجود التلاوة عند مروره بآية سجود، ويكبر لها دون تشهد أو تسليم." },
-    { roots: ["أحكام سجود الشكر", "سجدة الشكر لله"], reply: "يسن سجود الشكر لله تعالى عند تجدد نعمة عظيمة أو اندفاع نقمة، وهو سجدة واحدة." },
-    { roots: ["أحكام قصر الصلاة", "رخصة السفر", "السفر الصائم"], reply: "يشرع للمسافر قصر الصلاة الرباعية إلى ركعتين، وجمع الظهر والعصر أو المغرب والعشاء، ويجوز له الفطر في رمضان وقضاء عدد من أيام أخر." },
-    { roots: ["أحكام صلاة الخوف", "كيفية صلاة الحرب"], reply: "تشرع صلاة الخوف في المعارك بكيفيات متعددة وردت في السنة النبوية لحفظ الأمن." },
-    { roots: ["أحكام صلاة الجمعة", "التخلف عن الجمعة"], reply: "تجب صلاة الجمعة على كل مسلم بالغ عاقل مقيم، ومن تركها ثلاث جمع طبع الله على قلبه." },
-    { roots: ["أحكام صلاة العيدين", "تكبيرات العيد"], reply: "صلاة العيدين سنة مؤكدة، ويُسن فيها التكبير الزائد والخطبة بعدها لإدخال الفرح." },
-    { roots: ["أحكام صلاة الاستسقاء", "طلب الغيث"], reply: "تشرع صلاة الاستسقاء جماعة في المصلى عند احتضار المطر وتأخر الغيث مع التذلل والافتقار." },
-    { roots: ["أحكام صلاة الكسوف والخسوف", "الفزع إلى الصلاة"], reply: "تستحب صلاة الكسوف والخسوف بركعتين في كل ركعة قيامان وركوعان وسجودان." },
-    { roots: ["أحكام الجنازة"], reply: "صلاة الجنازة فرض كفاية، وأركانها أربع تكبيرات تقرأ فيها الفاتحة والصلاة والدعاء." },
-    { roots: ["أحكام التغسيل"], reply: "تغسيل الميت وتكفينه والصلاة عليه ودفنه فروض كفاية على المجتمع المسلم." },
-    { roots: ["أحكام الدفن"], reply: "يُسن دفن الميت في لحد مقبرة المسلمين موجهاً لقبلة الكعبة على شقه الأيمن." },
-    { roots: ["أحكام التعزية"], reply: "تشرع التعزية لأهل الميت لتسلية مصيبتهم ودعوتهم للصبر والاحتساب دون إحداث مآتم." },
-    { roots: ["أحكام القبور"], reply: "تشرع زيارة القبور للرجال والنساء للاتعاظ بالآخرة والدعاء للموتى بالسلام والمغفرة." },
-    { roots: ["أحكام الصيام"], reply: "الصيام ركن من أركان الإسلام، وشروطه الإسلام والبلوغ والعقل والإقامة والصحة." },
-    { roots: ["أحكام المفطرات"], reply: "يبطل الصيام بالأكل والشرب عمداً والجماع والاستقاءة العمد ونزول دم الحيض والنفاس." },
-    { roots: ["أحكام القضاء"], reply: "يجب قضاء الأيام المفطرة من رمضان قبل حلول رمضان التالي، ويجوز التفريق والتتابع." },
-    { roots: ["أحكام الفدية"], reply: "من عجز عن الصيام لكبر أو مرض مزمن لزمته الفدية بإطعام مسكين عن كل يوم أفطره." },
-    { roots: ["أحكام الحامل"], reply: "الحامل والمرضع إن خافتا على ولديهما أفطرتتا وقاضتا، وبعضهم أوجب مع القضاء الإطعام." },
-    { roots: ["أحكام التطوع"], reply: "أفضل الصيام تطوعاً صيام يوم وإفطار يوم، وصيام الإثنين والخميس وثلاثة أيام من كل شهر." },
-    { roots: ["أحكام الأيام البيض"], reply: "يُسن صيام الأيام البيض وهي الثالث عشر والرابع عشر والخامس عشر من كل شهر قَمَري." },
-    { roots: ["أحكام زكاة الفطر"], reply: "تجب زكاة الفطر على كل مسلم يملِك قوت يومه، ومقدارها صاع من تمر أو شعير أو طعام." },
-    { roots: ["أحكام زكاة المال", "التجارة المالية"], reply: "تجب زكاة المال إذا بلغ النصاب الشرعي وحال عليه الحول القمري، وتقوم عروض التجارة بسعر السوق وقت الحول." },
-    { roots: ["أحكام زكاة النقدين"], reply: "تجب الزكاة في الذهب والفضة والأوراق النقدية بنسبة ربع العشر (2.5 بالمئة)." },
-    { roots: ["أحكام الزروع", "الحبوب"], reply: "تجب زكاة الزروع والثمار فيما يكطال ويدخر إذا بلغ خمسة أوسق، ومقدارها العشر أو نصفه." },
-    { roots: ["أحكام المعادن", "الركاز"], reply: "الركاز المستخرج من دفن الجاهلية فيه الخمس مباشرة، والمعادن فيها الزكاة بشروطها." },
-    { roots: ["أحكام المصارف"], reply: "تُصرف الزكاة للأصناف الثمانية المذكورة في سورة التوبة كالفقراء والمساكين." },
-    { roots: ["أحكام الحج"], reply: "الحج فرض على كل مسلم مستطيع في عمره مرة، وأركانه الإحرام والطواف والسعي والوقوف بعرفة." },
-    { roots: ["أحكام العمرة"], reply: "العمرة سنة مؤكدة أو واجبة في العمر مرة، وتكفر ما بينها وبين العمرة الأخرى لمن أتمها." },
-    { roots: ["أحكام الإحرام"], reply: "يجب الإحرام من الميقات المحدد لمن أراد الحج أو العمرة، ومن جاوزه بلا إحرام لزمه دم." },
-    { roots: ["أحكام المحظورات"], reply: "يحرم على المحرم لبس المخيط للرجل، وتغطية الرأس، وقص الأظافر، وحلق الشعر، والطيب." },
-    { roots: ["أحكام الطواف"], reply: "طواف الإفاضة ركن من أركان الحج، وطواف الوداع واجب على الآفاقي قبل مغادرة مكة." },
-    { roots: ["أحكام السعي"], reply: "يبدأ السعي من الصفا وينتهي بالمروة سبعة أشواط تامة بعد طواف صحيح في الحج أو العمرة." },
-    { roots: ["أحكام الوقوف"], reply: "الوقوف بعرفة ركن الحج الأعظم، والمبيت بمزدلفة ومِنا من واجبات الحج اللازمة." },
-    { roots: ["أحكام الجمرات"], reply: "يجب رمي الجمرات الثلاث أيام التشريق حصاة حصاة مع التكبير لقول النبي صلى الله عليه وسلم." },
-    { roots: ["أحكام الأضحية"], reply: "الأضحية سنة مؤكدة لمن استطاع، ويشترط فيها السلامة والسن المعتبرة في الأنعام." },
-    { roots: ["أحكام العقيقة"], reply: "العقيقة سنة مؤكدة تذبح عن المولود يوم سابعه، شاتان عن الغلام وشاة عن الجارية." },
-    { roots: ["أحكام البيع"], reply: "يقوم البيع على الإيجاب والقبول ورضا المتبايعين، وخلوه من الربا والغرر المحرم." },
-    { roots: ["أحكام البيوع"], reply: "تحرم بيوع الغرر والمجهول والمعدوم والربا بأنواعه لما تسبب من أكل أموال الناس بالباطل." },
-    { roots: ["أحكام الإجارة"], reply: "الإجارة عقد جائز على المنافع أو الأعمال بأعمال معلومة وأجور محددة غير مجهولة." },
-    { roots: ["أحكام الشركة"], reply: "الشركة والمضاربة جائزتان لتنمية الأموال بالشروط الشرعية وتوزيع الأرباح بالاتفاق." },
-    { roots: ["أحكام الرهن"], reply: "الرهن وثيقة بالدين لاستيفائه عند التعذر، والكفالة التزام بالنفس والضمان بالمال." },
-    { roots: ["أحكام الوكالة"], reply: "تجوز الوكالة في كل حق يقبل النيابة كالبيع والشراء والخصومة وقبض الديون." },
-    { roots: ["أحكام اللقطة"], reply: "اللقطة تُعَرّف سنة كاملة، واللقيط نفس معصومة يجب رعايتها والإنفاق عليها." },
-    { roots: ["أحكام الوقف"], reply: "الوقف قربة عظيمة يحبس فيها الواقف أصل المال ويسپل منفعته في وجوه الخير والبر." },
-    { roots: ["أحكام الميراث"], reply: "الميراث نظام عادل يوزع التركة على أصحاب الفروض والعصبات بحسب الأنصباء القرآنية." },
-    { roots: ["أحكام الوصية"], reply: "تجوز الوصية لغير الوارث بحدود ثلث التركة فقط، ولا وصية لوارث إلا بإجازة الورثة." },
-    { roots: ["أحكام النكاح"], reply: "يقوم النكاح الصحيح على الإيجاب والقبول، ووجود الولي، والشهود، وخلو الزوجين من الموانع." },
-    { roots: ["أحكام الطلاق"], reply: "الخلع فرقة بعوض تأخذه الزوجة لتباري به زوجها، والطلاق بائن والعدة تحصين للرحم." },
-    { roots: ["أحكام الرضاع"], reply: "يحرم من الرضاع ما يحرم من النسب بشرط خمس رضعات مشبعات في سن الحولين الأولين." },
-    { roots: ["أحكام الحضانة"], reply: "الأم أحق بحضانة طفلها ما لم تتزوج بأجنبي، وحقها يسقط بالزواج أو بوجود مانع شرعي." },
-    { roots: ["أحكام الجنايات"], reply: "الجنايات توجب القصاص في العمد، والدية والكفارة في الخطأ لحفظ دماء البشر." },
-    { roots: ["أحكام الحدود"], reply: "الحدود عقوبات مقدرة شرعاً لحفظ الدين والأعراض والأموال كحد السرقة والزنا." },
-    { roots: ["أحكام التعزير"], reply: "التعزير عقوبات غير مقدرة شرعاً يجتهد فيها ولي الأمر والقاضي لدفع الجرائم وحماية المجتمع." },
-    { roots: ["أحكام الجهاد"], reply: "يُشرع الجهاد للدفاع عن الدين، وتجوز الهدنة والعهود مع الكفار إذا وجدت مصلحة راجحة." },
-    { roots: ["أحكام الذمة"], reply: "أهل الذمة لهم ما للمسلمين من حقوق الحماية والرعاية مقابل الجزية وحفظ النظام." },
-    { roots: ["أحكام الآداب"], reply: "أمر الإسلام بححسن الخلق، والصدق، والأمانة، والوفاء، وحرم الكذب والغيبة والنميمة." },
-    { roots: ["أحكام الصلة"], reply: "بر الوالدين وصلة الرحم من أعظم القربات الموجبة للجنة، وعقوقهما من أكبر الكبائر." },
-    { roots: ["أحكام الجوار"], reply: "يجب كف الأذى عن الجار وإكرامه، وإكرام الضيف من خصال الإيمان والتقوى لله تعالى." },
-    { roots: ["أحكام البيئة"], reply: "أمر الإسلام بالإحسان للحيوان وحرم تعذيبه، وحث على غرس الأشجار وإماطة الأذى." },
-    { roots: ["أحكام التوكل"], reply: "التوكل الحق يجمع بين صدق الاعتماد على الله وفعل الأسباب، والرضا بالقدر يورث الطمأنينة." },
-    { roots: ["أحكام الإخلاص"], reply: "الإخلاص شرط لقبول الأعمال، والمراقبة استشعار نظر الله في السر والعلن دائماً وأبداً." },
-    { roots: ["أحكام التوبة"], reply: "التوبة تجب ما قبلها، وشرائطها: الإقلاع عن الذنب، والندم، والعزم على عدم العودة." },
-    { roots: ["أحكام الذكر"], reply: "ذكر الله يجلو القلوب، والاستغفار يفتح الأقفال، والدعاء مخ العبادة وأعظم أسباب الإجابة." },
-    { roots: ["أحكام القيام"], reply: "قيام الليل دأب الصالحين ومطردة للداء عن الجسد، وأفضلها صلاة جوف الليل الآخر." },
-    { roots: ["أحكام التطوع المطلق"], reply: "يُسن صيام التطوع في الأيام الفاضلة كعاشوراء وعرفة وست شوال والاثنين والخميس." },
-    { roots: ["أحكام الصدقة"], reply: "الصدقة الخفية تطفئ غضب الرب، وتظل صاحبها في ظل عرشه يوم لا ظل إلا ظله." },
-    { roots: ["أحكام الإصلاح"], reply: "إصلاح ذات البين أفضل من درجة الصيام والصلاة، وفساد ذات البين هي الحالقة." },
-    { roots: ["أحكام اليتامى"], reply: "كافل اليتيم رفيق النبي صلى الله عليه وسلم في الجنة كهاتين وأشار بإصبعيه." },
-    { roots: ["أحكام اللسان"], reply: "حفظ اللسان من الغيبة والنميمة والبهتان من أعظم وسائل النجاة من عذاب النار." },
-    { roots: ["أحكام الستر"], reply: "من ستر مسلماً في الدنيا ستره الله في الدنيا والآخرة، والجزاء من جنس العمل." },
-    { roots: ["أحكام الظلم"], reply: "اتقوا الظلم فإن الظلم ظلمات يوم القيامة، وادعوا لنصرة المظلوم وردع الظالم." },
-    { roots: ["أحكام الحسد"], reply: "إياكم والحسد فإن الحسد يأكل الحسنات كما تأكل النار الحطب اليابس." },
-    { roots: ["أحكام الكبر"], reply: "الكبر بطر الحق وغمط الناس، وهو مانع من قبول الحق ودخول الجنة مع الأتقياء." },
-    { roots: ["أحكام الغيبة"], reply: "الغيبة والنميمة من الكبائر المحرمة التي تفسد المجتمعات وتورث عذاب القبر." },
-    { roots: ["أحكام الرشوة"], reply: "الرشوة والربا من أكبر الكبائر الموبقة المهلكة لصاحبها في الدنيا والآخرة." },
-    { roots: ["أحكام السحر"], reply: "من أتى كاهناً أو عرافاً فصدقه بما يقول فقد كفر بما أنزل على محمد صلى الله عليه وسلم." },
-    { roots: ["أحكام الشهادة"], reply: "شهادة الزور من أكبر الكبائر المهلكة بعد الإشراك بالله وعقوق الوالدين." },
-    { roots: ["أحكام اليمين"], reply: "اليمين الغموس هي التي يقتطع بها مال امرئ مسلم بغير حق، وتغمس صاحبها بالنار." },
-    { roots: ["أحكام القطيعة"], reply: "لا يدخل الجنة قاطع رحم لحديث البخاري الصحيح، وصلتها تزيد في الأجل والرزق." },
-    { roots: ["أحكام العقوق"], reply: "عقوق الوالدين من أكبر الكبائر المهلكة، وبرهما من أحب الأعمال إلى الله تعالى." },
-    { roots: ["أحكام التشبه"], reply: "لعن النبي صلى الله عليه وسلم المتشبهين من الرجال بالنساء والمتشبهات بالرجال." },
-    { roots: ["أحكام النياحة"], reply: "النياحة ورفع الصوت بالويل والثبور على الميت من أعمال الجاهلية المحرمة." },
-    { roots: ["أحكام الهجر"], reply: "لا يحل لمسلم أن يهجر أخاه فوق ثلاث ليال وخيرهما يبدأ بالسلام." },
-    { roots: ["أحكام الغضب"], reply: "ليس الشديد بالصرعة، بل الشديد الذي يملك نفسه عند الغضب، ولا تغضب ولك الجنة." },
-    { roots: ["أحكام الرياء"], reply: "أخوف ما أخاف عليكم الشرك الأصغر وهو الرياء الذي يحبط صالح الأعمال يوم القيامة." },
-    { roots: ["أحكام المعروف"], reply: "تغيير المنكر باليد أو اللسان أو القلب من أصول الدين وإصلاح المجتمع المسلم." },
-    { roots: ["أحكام النصيحة"], reply: "الدين النصيحة لله ولكتابه ولرسوله ولأئمة المسلمين وعامتهم بطلب الخير لهم." },
-    { roots: ["أحكام الوفاء"], reply: "الوفاء بالعهد وحفظ ود الأصدقاء وصلة المودة من شيم الكرام الأبرار الصالحين." },
-    { roots: ["أحكام الضيافة"], reply: "إكرام الضيف يوم وليلة، والضيافة ثلاثة أيام، وما زاد فهو صدقة تؤجر عليها." },
-    { roots: ["أحكام صلة الرحم"], reply: "ليس الواصل بالمكافئ، بل الواصل الذي إذا قطعت رحمه وصلها بالعفو والصفح." },
-    { roots: ["أحكام الخدم"], reply: "الرفق بالخدم والمماليك وإطعامهم مما تأكلون وتلبسون من توجيهات الإسلام السامية." },
-    { roots: ["أحكام التوقير"], reply: "توقير الكبير ورحمة الصغير من آداب الإسلام الرفيعة لحفظ تماسك المجتمع وأخلاقه." },
-    { roots: ["أحكام الحلم"], reply: "الحلم والأناة صفات نبيلة يحبها الله، والتعجل من الشيطان في تصريف الأمور." },
-    { roots: ["أحكام الصبر"], reply: "الصبر الجميل هو الذي لا شكوى فيه لغير الله، والرضا التام بالقدر المقدر بحكمة." },
-    { roots: ["أحكام الرضا"], reply: "عجباً لأمر المؤمن إن أمره كله خير، إن أصابته سرّاء شكر فكان خيراً له." }
-];
+    <script>
+        const sendBtn = document.getElementById('sendBtn');
+        const chatInput = document.getElementById('chatInput');
+        const body = document.body;
 
-const chat = document.getElementById('chat');
-const messageInput = document.getElementById('message');
-const sendBtn = document.getElementById('sendBtn');
-const welcome = document.getElementById('welcome');
+        sendBtn.addEventListener('click', () => {
+            if (chatInput.value.trim() !== "" || true) { // مفعل حتى لو الحقل فارغ للتجربة
+                // تفعيل تأثير اللمعان المتحرك مثل جيميناي
+                body.classList.add('gemini-glow');
+                
+                // إيقاف اللمعان تلقائياً بعد 4 ثوانٍ (أو يمكنك جعلها مستمرة حتى يتلقى رداً)
+                setTimeout(() => {
+                    body.classList.remove('gemini-glow');
+                }, 4000);
 
-function addMessage(text, sender) {
-    if (welcome) welcome.style.display = 'none';
-    const div = document.createElement('div');
-    div.className = `message ${sender}`;
-    if (sender === 'ai') {
-        div.innerHTML = text; // لكي يتم تفعيل روابط HTML المستدعاة من ملف media.html
-    } else {
-        div.textContent = text;
-    }
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-}
-
-function getBotReply(userText) {
-    userText = userText.trim().toLowerCase();
-
-    // دمج مصفوفة الردود المحلية مع البيانات التي تأتي من ملف media.html الخارجي
-    const externalMediaDatabase = (typeof window.mediaDatabase !== 'undefined') ? window.mediaDatabase : [];
-    const allKnowledge = [...chatKnowledge, ...externalMediaDatabase];
-
-    for (let item of allKnowledge) {
-        for (let root of item.roots) {
-            if (userText.includes(root.toLowerCase())) {
-                return item.reply;
+                // تفريغ الحقل بعد الإرسال
+                chatInput.value = "";
             }
-        }
-    }
-    return "تعذر تحميل الإجابة";
-}
+        });
+    </script>
 
-function handleSend() {
-    const text = messageInput.value;
-    if (!text.trim()) return;
-    addMessage(text, 'user');
-    messageInput.value = '';
-
-    setTimeout(() => {
-        const reply = getBotReply(text);
-        addMessage(reply, 'ai');
-    }, 400);
-}
-
-sendBtn.addEventListener('click', handleSend);
-messageInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-    }
-});
-</script>
 </body>
 </html>
