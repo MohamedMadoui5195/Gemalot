@@ -7,50 +7,33 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0d1117;
-    color: #f0f6fc;
+    font-family: Arial, sans-serif;
+    background-color: #0b0f19;
+    color: #ffffff;
     height: 100vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-/* الشريط العلوي الاحترافي */
+/* الشريط العلوي بالتدرج اللوني وبدون زر عودة */
 .header {
-    height: 60px;
-    background: linear-gradient(135deg, #1f2937, #111827);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 65px;
+    background: linear-gradient(90deg, #facc15, #f97316, #22c55e, #3b82f6);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
+    justify-content: flex-end;
+    padding: 0 20px;
     flex-shrink: 0;
 }
 
 .header-title {
-    color: #38bdf8;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: bold;
 }
 
-.back-btn {
-    background: rgba(56, 189, 248, 0.1);
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    color: #38bdf8;
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-    background: rgba(56, 189, 248, 0.2);
-}
-
-/* منطقة المحادثة */
+/* منطقة المحادثة والترحيب */
 .chat-container {
     flex: 1;
     overflow-y: auto;
@@ -63,65 +46,61 @@ body {
 }
 
 .welcome-box h1 {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 8px;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 6px;
     color: #ffffff;
 }
 
 .welcome-box p {
-    color: #94a3b8;
-    font-size: 14px;
+    color: #9ca3af;
+    font-size: 13px;
 }
 
-/* فقاعات الرسائل بتصميم احترافي */
+/* الرسائل داخل المحادثة */
 .message {
     max-width: 85%;
-    padding: 14px 18px;
-    margin: 10px 0;
-    border-radius: 14px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-radius: 16px;
     font-size: 14px;
-    line-height: 1.7;
+    line-height: 1.6;
     word-wrap: break-word;
     text-align: right;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-
 .message.user {
-    background: linear-gradient(135deg, #0284c7, #0369a1);
+    background: linear-gradient(90deg, #facc15, #f97316, #22c55e, #3b82f6);
     color: #ffffff;
+    font-weight: bold;
     margin-right: auto;
     border-bottom-left-radius: 4px;
 }
-
 .message.ai {
-    background: #1e293b;
-    color: #f1f5f9;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #ffffff;
+    color: #111827;
     margin-left: auto;
     border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* شريط الإدخال السفلي الاحترافي */
+/* شريط الإدخال السفلي */
 .input-area {
-    padding: 14px 16px;
-    background-color: #0d1117;
+    padding: 12px 16px;
+    background-color: #0b0f19;
     display: flex;
     justify-content: center;
     flex-shrink: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .input-wrapper {
     width: 100%;
-    max-width: 750px;
-    background: #161b22;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
+    max-width: 700px;
+    background: #ffffff;
+    border-radius: 35px;
     display: flex;
     align-items: center;
-    padding: 6px 8px 6px 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 4px 6px 4px 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .input-wrapper textarea {
@@ -129,23 +108,23 @@ body {
     background: transparent;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: #111827;
     font-size: 14px;
     resize: none;
-    max-height: 120px;
+    max-height: 100px;
     padding: 8px 0;
     direction: rtl;
 }
 
 .input-wrapper textarea::placeholder {
-    color: #64748b;
+    color: #9ca3af;
 }
 
 .send-btn {
-    width: 42px;
-    height: 42px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #0284c7, #0369a1);
+    background: linear-gradient(90deg, #facc15, #f97316, #22c55e);
     border: none;
     color: white;
     display: flex;
@@ -153,20 +132,15 @@ body {
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
-    transition: opacity 0.2s;
-}
-
-.send-btn:hover {
-    opacity: 0.9;
+    font-size: 13px;
+    font-weight: bold;
 }
 </style>
 </head>
 <body>
 
 <div class="header">
-    <button class="back-btn">العودة ←</button>
     <div class="header-title">Alislamiah-AI</div>
-    <div style="width: 60px;"></div>
 </div>
 
 <div class="chat-container" id="chatContainer">
@@ -179,24 +153,43 @@ body {
 <div class="input-area">
     <div class="input-wrapper">
         <textarea id="userInput" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
-        <button class="send-btn" id="sendBtn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-        </button>
+        <button class="send-btn" id="sendBtn">إرسال</button>
     </div>
 </div>
 
-<script src="media.html"></script>
-
 <script>
+/* قاعدة البيانات الفقهية الشاملة */
 const chatKnowledge = [
-    { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Alislamiah-AI، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
-    { roots: ["إلى اللقاء", "مع السلامة", "سلام", "باي", "وداعاً"], reply: "في أمان الله ورعايته! أتمنى أن أكون قد أفدتك، وتسعدني عودتك دائماً." },
-    { roots: ["أحكام سجدتي السهو", "سجود السهو"], reply: "سجود السهو مشروع لجبر ما حصل في الصلاة من زيادة أو نقص، ويكون قبل السلام أو بعده." },
-    { roots: ["أحكام سجود التلاوة", "سجدة القرآن"], reply: "يسجد القارئ والمستمع سجود التلاوة عند مروره بآية سجود، ويكبر لها دون تشهد أو تسليم." },
-    { roots: ["أحكام قصر الصلاة", "رخصة السفر"], reply: "يشرع للمسافر قصر الصلاة الرباعية إلى ركعتين، وجمع الظهر والعصر أو المغرب والعشاء." },
-    { roots: ["أحكام الصيام"], reply: "الصيام ركن من أركان الإسلام، وشروطه الإسلام والبلوغ والعقل والإقامة والصحة." },
-    { roots: ["أحكام زكاة المال"], reply: "تجب زكاة المال إذا بلغ النصاب الشرعي وحال عليه الحول القمري بنسبة ربع العشر (2.5 بالمئة)." },
-    { roots: ["أحكام الحج"], reply: "الحج فرض على كل مسلم مستطيع في عمره مرة، وأركانه الإحرام والطواف والسعي والوقوف بعرفة." }
+    { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً", "مرحبا"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Alislamiah-AI، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
+    { roots: ["إلى اللقاء", "مع السلامة", "سلام", "وداعاً"], reply: "في أمان الله ورعايته! أتمنى أن أكون قد أفدتك، وتسعدني عودتك دائماً." },
+    { roots: ["سجود السهو", "سجدتي السهو"], reply: "سجود السهو مشروع لجبر ما حصل في الصلاة من زيادة أو نقص، ويكون قبل السلام أو بعده." },
+    { roots: ["سجود التلاوة", "سجدة القرآن"], reply: "يسجد القارئ والمستمع سجود التلاوة عند مروره بآية سجود، ويكبر لها دون تشهد أو تسليم." },
+    { roots: ["سجود الشكر"], reply: "يسن سجود الشكر لله تعالى عند تجدد نعمة عظيمة أو اندفاع نقمة، وهو سجدة واحدة." },
+    { roots: ["قصر الصلاة", "رخصة السفر", "صلاة المسافر"], reply: "يشرع للمسافر قصر الصلاة الرباعية إلى ركعتين، وجمع الظهر والعصر أو المغرب والعشاء، ويجوز له الفطر في رمضان." },
+    { roots: ["صلاة الجمعة"], reply: "تجب صلاة الجمعة على كل مسلم بالغ عاقل مقيم، ومن تركها ثلاث جمع طبع الله على قلبه." },
+    { roots: ["صلاة العيدين"], reply: "صلاة العيدين سنة مؤكدة، ويُسن فيها التكبير الزائد والخطبة بعدها لإدخال الفرح." },
+    { roots: ["صلاة الاستسقاء"], reply: "تشرع صلاة الاستسقاء جماعة في المصلى عند انقطاع المطر وتأخر الغيث مع التذلل والافتقار لله." },
+    { roots: ["صلاة الكسوف", "صلاة الخسوف"], reply: "تستحب صلاة الكسوف والخسوف بركعتين في كل ركعة قيامان وركوعان وسجودان." },
+    { roots: ["صلاة الجنازة"], reply: "صلاة الجنازة فرض كفاية، وأركانها أربع تكبيرات تقرأ فيها الفاتحة والصلاة الإبراهيمية والدعاء للميت." },
+    { roots: ["الصيام", "احكام الصيام", "رمضان"], reply: "الصيام ركن من أركان الإسلام، وشروطه الإسلام والبلوغ والعقل والإقامة والصحة." },
+    { roots: ["المفطرات"], reply: "يبطل الصيام بالأكل والشرب عمداً والجماع والاستقاءة العمد ونزول دم الحيض والنفاس." },
+    { roots: ["القضاء"], reply: "يجب قضاء الأيام المفطرة من رمضان قبل حلول رمضان التالي، ويجوز التفريق والتتابع." },
+    { roots: ["الفدية"], reply: "من عجز عن الصيام لكبر أو مرض مزمن لزمته الفدية بإطعام مسكين عن كل يوم أفطره." },
+    { roots: ["زكاة المال", "الزكاة"], reply: "تجب زكاة المال إذا بلغ النصاب الشرعي وحال عليه الحول القمري بنسبة ربع العشر (2.5 بالمئة)." },
+    { roots: ["زكاة الفطر"], reply: "تجب زكاة الفطر على كل مسلم يملِك قوت يومه، ومقدارها صاع من تمر أو شعير أو طعام." },
+    { roots: ["الحج", "احكام الحج والعمرة"], reply: "الحج فرض على كل مسلم مستطيع في عمره مرة، وأركانه الإحرام والطواف والسعي والوقوف بعرفة." },
+    { roots: ["العمرة"], reply: "العمرة سنة مؤكدة أو واجبة في العمر مرة، وتكفر ما بينها وبين العمرة الأخرى لمن أتمها." },
+    { roots: ["الإحرام"], reply: "يجب الإحرام من الميقات المحدد لمن أراد الحج أو العمرة، ومن جاوزه بلا إحرام لزمه دم." },
+    { roots: ["الأضحية"], reply: "الأضحية سنة مؤكدة لمن استطاع، ويشترط فيها السلامة والسن المعتبرة في الأنعام." },
+    { roots: ["البيوع", "التجارة"], reply: "يقوم البيع على الإيجاب والقبول ورضا المتبايعين، وخلوه من الربا والغرر المحرم." },
+    { roots: ["الميراث"], reply: "الميراث نظام عادل يوزع التركة على أصحاب الفروض والعصبات بحسب الأنصباء القرآنية." },
+    { roots: ["الوصية"], reply: "تجوز الوصية لغير الوارث بحدود ثلث التركة فقط، ولا وصية لوارث إلا بإجازة الورثة." },
+    { roots: ["النكاح", "الزواج"], reply: "يقوم النكاح الصحيح على الإيجاب والقبول، ووجود الولي، والشهود، وخلو الزوجين من الموانع." },
+    { roots: ["الطلاق"], reply: "الطلاق حق للزوج بيد، ويدخل في الأحكام الخمسة بحسب سببه، والعدة تحصين للرحم." },
+    { roots: ["الرضاع"], reply: "يحرم من الرضاع ما يحرم من النسب بشرط خمس رضعات مشبعات في سن الحولين الأولين." },
+    { roots: ["الحضانة"], reply: "الأم أحق بحضانة طفلها ما لم تتزوج بأجنبي، وحقها يسقط بالزواج أو بوجود مانع شرعي." },
+    { roots: ["بر الوالدين", "صلة الرحم"], reply: "بر الوالدين وصلة الرحم من أعظم القربات الموجبة للجنة، وعقوقهما من أكبر الكبائر." },
+    { roots: ["التوبة"], reply: "التوبة تجب ما قبلها، وشرائطها: الإقلاع عن الذنب، والندم، والعزم على عدم العودة." }
 ];
 
 const chatContainer = document.getElementById('chatContainer');
@@ -208,9 +201,23 @@ function appendMessage(text, sender) {
     if (welcomeBox) welcomeBox.style.display = 'none';
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${sender}`;
-    msgDiv.textContent = text;
     chatContainer.appendChild(msgDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+    if (sender === 'ai') {
+        let i = 0;
+        function typeWriter() {
+            if (i < text.length) {
+                msgDiv.textContent += text.charAt(i);
+                i++;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                setTimeout(typeWriter, 15);
+            }
+        }
+        typeWriter();
+    } else {
+        msgDiv.textContent = text;
+    }
 }
 
 function processMessage() {
@@ -221,10 +228,7 @@ function processMessage() {
 
     setTimeout(() => {
         let reply = "عذراً، لم أتمكن من العثور على إجابة لهذا السؤال.";
-        const externalMediaDatabase = (typeof window.mediaDatabase !== 'undefined') ? window.mediaDatabase : [];
-        const fullDb = [...chatKnowledge, ...externalMediaDatabase];
-        
-        for (let item of fullDb) {
+        for (let item of chatKnowledge) {
             for (let root of item.roots) {
                 if (text.trim().toLowerCase().includes(root.toLowerCase())) {
                     reply = item.reply;
