@@ -16,7 +16,7 @@ body {
     overflow: hidden;
 }
 
-/* الشريط العلوي الاحترافي المطابق لـ Alislamiah AI */
+/* الشريط العلوي الاحترافي */
 .header {
     height: 60px;
     background: linear-gradient(135deg, #1f2937, #111827);
@@ -33,9 +33,6 @@ body {
     font-size: 18px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .back-btn {
@@ -77,7 +74,7 @@ body {
     font-size: 14px;
 }
 
-/* فقاعات الرسائل الاحترافية */
+/* فقاعات الرسائل بتصميم احترافي */
 .message {
     max-width: 85%;
     padding: 14px 18px;
@@ -188,8 +185,9 @@ body {
     </div>
 </div>
 
+<script src="media.html"></script>
+
 <script>
-// قاعدة البيانات مدمجة هنا بالكامل لمنع أي أخطاء أو ملفات خارجية ناقصة
 const chatKnowledge = [
     { roots: ["كيف يمكنك مساعدتك", "مرحباً", "السلام عليكم", "أهلاً"], reply: "وعليكم السلام ورحمة الله وبركاته! أنا مساعدك الذكي Alislamiah-AI، جاهز لإجابتك عن الأسئلة والأحكام الفقهية الشرعية." },
     { roots: ["إلى اللقاء", "مع السلامة", "سلام", "باي", "وداعاً"], reply: "في أمان الله ورعايته! أتمنى أن أكون قد أفدتك، وتسعدني عودتك دائماً." },
@@ -223,7 +221,10 @@ function processMessage() {
 
     setTimeout(() => {
         let reply = "عذراً، لم أتمكن من العثور على إجابة لهذا السؤال.";
-        for (let item of chatKnowledge) {
+        const externalMediaDatabase = (typeof window.mediaDatabase !== 'undefined') ? window.mediaDatabase : [];
+        const fullDb = [...chatKnowledge, ...externalMediaDatabase];
+        
+        for (let item of fullDb) {
             for (let root of item.roots) {
                 if (text.trim().toLowerCase().includes(root.toLowerCase())) {
                     reply = item.reply;
