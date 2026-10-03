@@ -153,6 +153,49 @@ body {
     font-size: 13px;
     font-weight: bold;
 }
+
+/* الألوان: أصفر، برتقالي، أحمر، بنفسجي، أزرق، أخضر */
+.gemini-glow {
+  background: linear-gradient(
+    120deg, 
+    #ffeb3b, /* أصفر */
+    #ff9800, /* برتقالي */
+    #f44336, /* أحمر */
+    #9c27b0, /* بنفسجي */
+    #2196f3, /* أزرق */
+    #4caf50, /* أخضر */
+    #ffeb3b  /* تكرار للأنسياب */
+  );
+  background-size: 300% 300%;
+  filter: blur(10px);
+}
+
+/* 1. عند الضغط/التركيز على شريط الكتابة */
+.gemini-glow.active {
+  animation: geminiFlow 4s ease infinite;
+}
+
+/* 2. عند إرسال الكلمة */
+.gemini-glow.sending {
+  animation: geminiPulse 0.8s ease-in-out;
+}
+
+/* انسياب الألوان الهادئ */
+@keyframes geminiFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* نبضة أسرع عند الإرسال */
+@keyframes geminiPulse {
+  0% { background-position: 0% 50%; transform: scale(0.98); }
+  50% { background-position: 100% 50%; transform: scale(1.03); }
+  100% { background-position: 0% 50%; transform: scale(1); }
+}
+
+
+
 </style>
 </head>
 <body>
