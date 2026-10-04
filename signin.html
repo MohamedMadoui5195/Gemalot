@@ -79,10 +79,12 @@ h1{font-size:24px;margin-bottom:6px}
 function getUsers() {
   return JSON.parse(localStorage.getItem("alislamiah_users") || "[]");
 }
+
 function setCurrentUser(user) {
   localStorage.setItem("alislamiah_current_user", JSON.stringify(user));
 }
 
+// إذا كان مسجلاً مسبقاً → ادخل مباشرة
 if (localStorage.getItem("alislamiah_current_user")) {
   window.location.href = "index.html";
 }
@@ -112,24 +114,53 @@ function login() {
     return;
   }
 
-  setCurrentUser({ id: found.id, name: found.name, email: found.email || found.phone });
+  setCurrentUser({ 
+    id: found.id, 
+    name: found.name, 
+    email: found.email || found.phone 
+  });
   window.location.href = "index.html";
 }
 
 function loginWithAlislamiah() {
-  // نفس قاعدة البيانات المحلية
-  const users = getUsers();
-  if (users.length === 0) {
-    document.getElementById("msg").className = "message error";
-    document.getElementById("msg").textContent = "لا يوجد حساب بعد، أنشئ حساباً أولاً";
+  const msg = document.getElementById("msg");
+  msg.textContent = "";
+  msg.className = "message";
+
+  // 1. إذا كان هناك جلسة نشطة مسبقاً
+  const current = localStorage.getItem("alislamiah_current_user");
+  if (current) {
+    window.location.href = "index.html";
     return;
   }
-  // تسجيل دخول تلقائي بآخر مستخدم (مثال بسيط)
-  const last = users[users.length - 1];
-  setCurrentUser({ id: last.id, name: last.name, email: last.email || last.phone });
-  window.location.href = "index.html";
+
+  // 2. ابحث عن أي حساب موجود في قاعدة البيانات المحلية
+  const users = getUsers();
+
+  if (users.length === 0) {
+    msg.className = "message error";
+    msg.textContent = "لا يوجد حساب. أنشئ حساباً أولاً من زر إنشاء حساب";
+    return;
+  }
+
+  // 3. تسجيل دخول بآخر حساب موجود (يعمل بشكل موثوق)
+  const lastUser = users[users.length - 1];
+  
+  setCurrentUser({
+    id: lastUser.id,
+    name: lastUser.name,
+    email: lastUser.email || lastUser.phone
+  });
+
+  msg.className = "message success";
+  msg.textContent = "تم تسجيل الدخول بنجاح...";
+  
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 600);
 }
 
+// زر Enter
 document.getElementById("password").addEventListener("keypress", function(e) {
   if (e.key === "Enter") login();
 });
