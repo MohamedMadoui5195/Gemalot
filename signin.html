@@ -27,7 +27,7 @@ h1{font-size:24px;margin-bottom:6px}
 .btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(90deg,#facc15,#f97316,#22c55e);color:#111;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px}
 .btn:hover{opacity:.95}
 
-.btn-alt{width:100%;padding:13px;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;background:transparent;color:#fff;font-size:15px;font-weight:600;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-alt{width:100%;padding:13px;border:1.5px solid rgba(255,255,255,.2);border-radius:12px;background:transparent;color:#fff;font-size:15px;font-weight:600;cursor:pointer;margin-top:12px}
 .btn-alt:hover{background:rgba(255,255,255,.06)}
 
 .message{margin-top:14px;font-size:14px;min-height:20px}
@@ -84,6 +84,7 @@ function setCurrentUser(user) {
   localStorage.setItem("alislamiah_current_user", JSON.stringify(user));
 }
 
+// إذا كان مسجلاً مسبقاً ادخل مباشرة
 if (localStorage.getItem("alislamiah_current_user")) {
   window.location.href = "index.html";
 }
@@ -113,11 +114,12 @@ function login() {
     return;
   }
 
-  setCurrentUser({ 
-    id: found.id, 
-    name: found.name, 
-    email: found.email || found.phone 
+  setCurrentUser({
+    id: found.id,
+    name: found.name,
+    email: found.email || found.phone
   });
+
   window.location.href = "index.html";
 }
 
@@ -126,20 +128,23 @@ function loginWithAlislamiah() {
   msg.textContent = "";
   msg.className = "message";
 
+  // تحقق من وجود جلسة Alislamiah AI
   const currentUser = localStorage.getItem("alislamiah_current_user");
 
   if (currentUser) {
+    // يوجد حساب → ادخل
     msg.className = "message success";
     msg.textContent = "تم تسجيل الدخول بحساب Alislamiah AI";
-    setTimeout(() => {
+    setTimeout(function() {
       window.location.href = "index.html";
-    }, 800);
+    }, 700);
   } else {
+    // لا يوجد حساب → حول إلى موقع Alislamiah AI
     msg.className = "message";
     msg.textContent = "جاري التحويل إلى Alislamiah AI...";
-    setTimeout(() => {
+    setTimeout(function() {
       window.location.href = "https://mohamedmadoui5195.github.io/Alislamiah-AI/signin.html";
-    }, 900);
+    }, 800);
   }
 }
 
