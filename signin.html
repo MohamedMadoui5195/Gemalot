@@ -84,7 +84,6 @@ function setCurrentUser(user) {
   localStorage.setItem("alislamiah_current_user", JSON.stringify(user));
 }
 
-// إذا كان مسجلاً مسبقاً → ادخل مباشرة
 if (localStorage.getItem("alislamiah_current_user")) {
   window.location.href = "index.html";
 }
@@ -127,18 +126,15 @@ function loginWithAlislamiah() {
   msg.textContent = "";
   msg.className = "message";
 
-  // 1. هل يوجد حساب مسجل حالياً في Alislamiah AI؟
   const currentUser = localStorage.getItem("alislamiah_current_user");
 
   if (currentUser) {
-    // نعم → ادخل مباشرة إلى Gemalot
     msg.className = "message success";
     msg.textContent = "تم تسجيل الدخول بحساب Alislamiah AI";
     setTimeout(() => {
       window.location.href = "index.html";
     }, 800);
   } else {
-    // لا → حول المستخدم إلى صفحة تسجيل الدخول الحقيقية
     msg.className = "message";
     msg.textContent = "جاري التحويل إلى Alislamiah AI...";
     setTimeout(() => {
@@ -147,7 +143,6 @@ function loginWithAlislamiah() {
   }
 }
 
-// زر Enter
 document.getElementById("password").addEventListener("keypress", function(e) {
   if (e.key === "Enter") login();
 });
