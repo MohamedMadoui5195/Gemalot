@@ -8,7 +8,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}
 
-/* الشريط العلوي */
 .header{
   height:60px;
   background:linear-gradient(90deg,#facc15,#f97316,#22c55e,#3b82f6);
@@ -21,8 +20,8 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   z-index:1000;
 }
 .header-title{font-size:20px;font-weight:bold;color:#fff}
+.header-actions{display:flex;gap:10px;align-items:center}
 
-/* زر القائمة (ثلاث خطوط) */
 .menu-btn{
   width:40px;height:40px;
   background:rgba(0,0,0,.25);
@@ -30,16 +29,52 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   cursor:pointer;
   display:flex;flex-direction:column;
   justify-content:center;align-items:center;gap:5px;
+  color:#fff;font-size:18px;
 }
 .menu-btn span{
   display:block;width:20px;height:2.5px;
   background:#fff;border-radius:2px;
 }
 
-/* قائمة المحادثات */
+/* شريط النماذج */
+.models-bar{
+  position:fixed;
+  top:60px;
+  left:0;
+  width:100%;
+  background:#0b0f19;
+  padding:10px 16px;
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  z-index:950;
+  border-bottom:1px solid #1f2937;
+}
+.model-btn{
+  flex-shrink:0;
+  padding:8px 16px;
+  border-radius:20px;
+  border:1.5px solid rgba(255,255,255,.15);
+  background:transparent;
+  color:#e5e7eb;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:.2s;
+}
+.model-btn.active{
+  background:linear-gradient(90deg,#facc15,#f97316,#22c55e,#3b82f6);
+  color:#111;
+  border-color:transparent;
+}
+.model-btn:hover:not(.active){
+  background:rgba(255,255,255,.08);
+}
+
 .sidebar{
-  position:fixed;top:60px;right:0;
-  width:280px;height:calc(100vh - 60px);
+  position:fixed;top:110px;right:0;
+  width:280px;height:calc(100vh - 110px);
   background:#111827;
   border-left:1px solid #1f2937;
   z-index:900;
@@ -61,10 +96,9 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   color:#111;font-weight:bold;cursor:pointer;margin-bottom:16px;
 }
 
-/* منطقة المحادثة */
 .chat-container{
   flex:1;width:100%;max-width:800px;
-  margin:60px auto 90px;padding:20px;
+  margin:110px auto 90px;padding:20px;
   display:flex;flex-direction:column;
 }
 .welcome-box{text-align:center;margin:auto;padding:40px 0}
@@ -87,7 +121,6 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   box-shadow:0 4px 6px rgba(0,0,0,.1);
 }
 
-/* شريط الإدخال */
 .input-area{
   position:fixed;bottom:0;left:0;width:100%;
   padding:12px 16px;background:#0b0f19;
@@ -112,10 +145,14 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   font-size:13px;font-weight:bold;
 }
 
-/* ===== توهج الصفحة كلها (أصفر - برتقالي - أخضر - أزرق) ===== */
+/* ===== تأثير التوهج (أصفر - برتقالي - أخضر - أزرق) ===== */
 .full-glow{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  pointer-events:none;z-index:9999;opacity:0;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  z-index:9999;
+  opacity:0;
   background:linear-gradient(120deg,
     #facc15 0%,
     #f97316 25%,
@@ -124,16 +161,16 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     #facc15 100%
   );
   background-size:400% 400%;
-  mix-blend-mode:soft-light;
+  mix-blend-mode:screen;
 }
 .full-glow.active{
   animation:fullGlowFlow 2s ease-in-out forwards;
 }
 @keyframes fullGlowFlow{
-  0%{background-position:0% 50%;opacity:0.85}
-  25%{background-position:40% 50%;opacity:0.95}
-  50%{background-position:80% 50%;opacity:0.8}
-  100%{background-position:0% 50%;opacity:0}
+  0%{background-position:0% 50%; opacity:0.75}
+  25%{background-position:40% 50%; opacity:0.9}
+  50%{background-position:80% 50%; opacity:0.8}
+  100%{background-position:0% 50%; opacity:0}
 }
 
 @media(max-width:768px){.sidebar{width:100%}}
@@ -146,15 +183,24 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 
 <div class="header">
   <div class="header-title">Gemalot</div>
-  <!-- زر القائمة ثلاث خطوط -->
-  <button class="menu-btn" onclick="toggleSidebar()">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
+  <div class="header-actions">
+    <button class="menu-btn" onclick="window.location.href='Settings.html'" title="Settings">⚙️</button>
+    <button class="menu-btn" onclick="toggleSidebar()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
 </div>
 
-<!-- قائمة المحادثات -->
+<!-- شريط النماذج -->
+<div class="models-bar">
+  <button class="model-btn active" data-model="plus" onclick="selectModel(this)">Gemalot Plus</button>
+  <button class="model-btn" data-model="bronze" onclick="selectModel(this)">Gemalot Bronze</button>
+  <button class="model-btn" data-model="silver" onclick="selectModel(this)">Gemalot Silver</button>
+  <button class="model-btn" data-model="gold" onclick="selectModel(this)">Gemalot Gold</button>
+</div>
+
 <div class="sidebar" id="sidebar">
   <button class="new-chat-btn" onclick="newChat()">+ محادثة جديدة</button>
   <h3>المحادثات السابقة</h3>
@@ -176,7 +222,6 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 </div>
 
 <script>
-/* التحقق من تسجيل الدخول */
 if (!localStorage.getItem("alislamiah_current_user")) {
   window.location.href = "signin.html";
 }
@@ -229,15 +274,30 @@ const chatList = document.getElementById('chatList');
 
 let currentChatId = null;
 let messages = [];
+let currentModel = localStorage.getItem('gemalot_model') || 'plus';
 
-/* توهج الصفحة */
+function selectModel(btn) {
+  document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentModel = btn.getAttribute('data-model');
+  localStorage.setItem('gemalot_model', currentModel);
+}
+
+document.querySelectorAll('.model-btn').forEach(btn => {
+  if (btn.getAttribute('data-model') === currentModel) {
+    btn.classList.add('active');
+  } else {
+    btn.classList.remove('active');
+  }
+});
+
+/* ===== تأثير التوهج ===== */
 function triggerFullGlow() {
   fullGlow.classList.remove('active');
   void fullGlow.offsetWidth;
   fullGlow.classList.add('active');
 }
 
-/* المحادثات */
 function getChats() {
   return JSON.parse(localStorage.getItem("gemalot_chats") || "[]");
 }
@@ -339,7 +399,7 @@ function processMessage() {
   }, 300);
 }
 
-/* توهج عند الضغط على الشريط */
+// توهج عند الضغط على شريط الكتابة
 userInput.addEventListener("focus", triggerFullGlow);
 
 sendBtn.addEventListener("click", processMessage);
