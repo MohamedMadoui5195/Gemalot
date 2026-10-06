@@ -1,27 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head><style>
-@font-face {
-  font-family: "Optimistic";
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Optimistic Mono";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
-}
-:where(html) {
-  font-family: "Optimistic", system-ui, sans-serif;
-}
-:where(code, pre, kbd, samp) {
-  font-family: "Optimistic Mono", ui-monospace, monospace;
-}
-</style>
+<head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gemalot</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
@@ -82,7 +61,7 @@
 </style>
 </head>
 <body>
-<div class="header"><div class="header-title">Gemalot</div><div class="header-actions"><div id="msgCounter" class="counter-badge">25/25</div><button id="settingsBtn" class="menu-btn">⚙️</button><button class="menu-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button></div></div>
+<div class="header"><div class="header-title">Gemalot</div><div class="header-actions"><div id="msgCounter" class="counter-badge">25/25</div><button id="settingsBtn" class="menu-btn">⚙️️</button><button class="menu-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button></div></div>
 <div class="models-bar">
 <button class="model-btn active" onclick="selectModel(this)">Gemalot Normal</button>
 <button class="model-btn locked" onclick="location.href='subscription.html'">Plus 45 🔒</button>
@@ -139,7 +118,7 @@ function updateLimitUI(){checkAndResetDaily();const counter=document.getElementB
 function selectModel(btn){document.querySelectorAll('.model-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 let messages=[];let currentChatId=null;
 const chatContainer=document.getElementById('chatContainer');const userInput=document.getElementById('userInput');const sendBtn=document.getElementById('sendBtn');const fileInput=document.getElementById('fileInput');
-function appendMessage(text,sender,save=true,source,htmlContentent){
+function appendMessage(text,sender,save=true,source,htmlContent){
   const w=document.getElementById("welcomeBox");if(w)w.style.display="none";
   const div=document.createElement("div");div.className=`message ${sender}`;
   if(htmlContent){div.innerHTML=htmlContent;}
@@ -164,7 +143,7 @@ fileInput.addEventListener("change", async (e)=>{
 function askImageGen(){const p=prompt("وصف الصورة:");if(p)processMessage("صورة: "+p);}
 function askVideoGen(){const p=prompt("وصف الفيديو:");if(p)processMessage("فيديو: "+p);}
 function insertPrompt(txt){userInput.value=txt;userInput.focus();updateSendIcon();}
-function generateImagePollinations(prompt){const seed=Math.floor(Math.random()*100000);const enc=encodeURIComponent(prompt+", ultra detailed, 4k, professional");return `https://image.pollinations.ai/prompt/${enc}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true`;}
+function generateImagePollinations(prompt){const seed=Math.floor(Math.random()*100000);const enc=encodeURIComponent(prompt+" , ultra detailed, 4k, professional");return `https://image.pollinations.ai/prompt/${enc}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true`;}
 function generateVideoCanvas(prompt){const canvas=document.createElement("canvas");canvas.width=640;canvas.height=360;const ctx=canvas.getContext("2d");let frame=0;return new Promise(resolve=>{const stream=canvas.captureStream(30);const recorder=new MediaRecorder(stream,{mimeType:"video/webm"});const chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const blob=new Blob(chunks,{type:"video/webm"});resolve(URL.createObjectURL(blob));};recorder.start();function draw(){ctx.fillStyle=`hsl(${(frame*2)%360},70%,30%)`;ctx.fillRect(0,0,640,360);ctx.fillStyle="#fff";ctx.font="bold 24px Arial";ctx.textAlign="center";ctx.fillText(prompt.slice(0,40),320,180);ctx.font="14px Arial";ctx.fillText(`Gemalot Video - ${frame}`,320,210);frame++;if(frame<60){requestAnimationFrame(draw);}else{setTimeout(()=>recorder.stop(),200);}}draw();});}
 function solveMathPro(text){try{let expr=text.replace("حل المعادلة:","").replace("حل:","").replace("solve:","").trim();if(!expr)return null;if(expr.includes("=")){const parts=expr.split("=");if(parts.length===2){const left=parts[0].trim();const right=parts[1].trim();if(left.toLowerCase().includes("x")){try{const eq=math.parse(left+" - ("+right+")");for(let x=-100;x<=100;x+=0.5){const v=eq.evaluate({x});if(Math.abs(v)<0.001){return `🧮 الحل العفوي:\n${expr}\n\nالخطوات:\n${left} = ${right}\n${left} - ${right} = 0\nنجرب x=${x}\nالتحقق: ${math.evaluate(left,{x})} ≈ ${right}\n\nالجواب: x = ${x} ✅`;}}}catch{}}try{const r=math.evaluate(right);const l=math.evaluate(left);return `اليمين = ${r}\nاليسار = ${l}`;}catch{}}}const res=math.evaluate(expr);return `🧮 حل عفوي:\n${expr} = ${res}\nالخطوات: طبقت الأولويات → الناتج ${res} ✅`;}catch{return null;}}
 async function safeFetch(url){try{const r=await fetch(url);if(!r.ok)return null;return r;}catch{return null;}}
