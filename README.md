@@ -143,60 +143,9 @@ fileInput.addEventListener("change", async (e)=>{
 function askImageGen(){const p=prompt("وصف الصورة:");if(p)processMessage("صورة: "+p);}
 function askVideoGen(){const p=prompt("وصف الفيديو:");if(p)processMessage("فيديو: "+p);}
 function insertPrompt(txt){userInput.value=txt;userInput.focus();updateSendIcon();}
-
-// 1. التوليد الفعلي للصور عالية الدقة
-function generateImagePollinations(prompt){
-  const seed=Math.floor(Math.random()*100000);
-  const enc=encodeURIComponent(prompt+" , highly detailed, 4k resolution, cinematic, realistic");
-  return `https://image.pollinations.ai/prompt/${enc}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true`;
-}
-
-// 2. التوليد الفعلي لمقاطع الفيديو الحقيقية
-function generateVideoCanvas(prompt){
-  const seed=Math.floor(Math.random()*100000);
-  const enc=encodeURIComponent(prompt);
-  return `https://image.pollinations.ai/prompt/${enc}?width=1280&height=720&seed=${seed}&nologo=true&model=video`;
-}
-
-// 3. المحرك الرياضي الديناميكي لحل المعادلات والعمليات
-function solveMathPro(text){
-  try{
-    let expr=text.replace("حل المعادلة:","").replace("حل:","").replace("solve:","").trim();
-    if(!expr)return null;
-
-    if(expr.includes("=")){
-      const parts=expr.split("=");
-      if(parts.length===2){
-        const left=parts[0].trim();
-        const right=parts[1].trim();
-        if(left.toLowerCase().includes("x") || right.toLowerCase().includes("x")){
-          try{
-            const eq=math.parse(`(${left}) - (${right})`);
-            let solvedX=null;
-            for(let x=-100; x<=100; x+=0.5){
-              if(Math.abs(eq.evaluate({x}))<0.0001){
-                solvedX=x;
-                break;
-              }
-            }
-            if(solvedX!==null){
-              return `🧮 **خطوات حل المعادلة:**\nالمعادلة: ${expr}\n1) تبسيط الطرفين والتحويل إلى صيغة صفرية\n2) التعويض وإيجاد الجذور\n\n✅ **النتيجة النهائية:** x = ${solvedX}`;
-            }
-          }catch(e){}
-        }
-      }
-    }
-
-    const res=math.evaluate(expr);
-    if(res!==undefined){
-      return `🧮 **العملية الحسابية:**\nالمسألة: ${expr}\nتطبيق الأولويات الحسابية...\n\n✅ **الناتج النهائي:** ${res}`;
-    }
-  }catch(e){
-    return null;
-  }
-  return null;
-}
-
+function generateImagePollinations(prompt){const seed=Math.floor(Math.random()*100000);const enc=encodeURIComponent(prompt+" , ultra detailed, 4k, professional");return `https://image.pollinations.ai/prompt/${enc}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true`;}
+function generateVideoCanvas(prompt){const canvas=document.createElement("canvas");canvas.width=640;canvas.height=360;const ctx=canvas.getContext("2d");let frame=0;return new Promise(resolve=>{const stream=canvas.captureStream(30);const recorder=new MediaRecorder(stream,{mimeType:"video/webm"});const chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const blob=new Blob(chunks,{type:"video/webm"});resolve(URL.createObjectURL(blob));};recorder.start();function draw(){ctx.fillStyle=`hsl(${(frame*2)%360},70%,30%)`;ctx.fillRect(0,0,640,360);ctx.fillStyle="#fff";ctx.font="bold 24px Arial";ctx.textAlign="center";ctx.fillText(prompt.slice(0,40),320,180);ctx.font="14px Arial";ctx.fillText(`Gemalot Video - ${frame}`,320,210);frame++;if(frame<60){requestAnimationFrame(draw);}else{setTimeout(()=>recorder.stop(),200);}}draw();});}
+function solveMathPro(text){try{let expr=text.replace("حل المعادلة:","").replace("حل:","").replace("solve:","").trim();if(!expr)return null;if(expr.includes("=")){const parts=expr.split("=");if(parts.length===2){const left=parts[0].trim();const right=parts[1].trim();if(left.toLowerCase().includes("x")){try{const eq=math.parse(left+" - ("+right+")");for(let x=-100;x<=100;x+=0.5){const v=eq.evaluate({x});if(Math.abs(v)<0.001){return `🧮 الحل العفوي:\n${expr}\n\nالخطوات:\n${left} = ${right}\n${left} - ${right} = 0\nنجرب x=${x}\nالتحقق: ${math.evaluate(left,{x})} ≈ ${right}\n\nالجواب: x = ${x} ✅`;}}}catch{}}try{const r=math.evaluate(right);const l=math.evaluate(left);return `اليمين = ${r}\nاليسار = ${l}`;}catch{}}}const res=math.evaluate(expr);return `🧮 حل عفوي:\n${expr} = ${res}\nالخطوات: طبقت الأولويات → الناتج ${res} ✅`;}catch{return null;}}
 async function safeFetch(url){try{const r=await fetch(url);if(!r.ok)return null;return r;}catch{return null;}}
 async function searchWikipediaLang(q,lang){try{let res=await safeFetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`);if(res){const d=await res.json();if(d.extract&&d.extract.length>40)return {text:d.extract, source:`Wikipedia ${lang}`};}res=await safeFetch(`https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*`);if(res){const d=await res.json();const first=d.query?.search?.[0]?.title;if(first){res=await safeFetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(first)}`);if(res){const dd=await res.json();if(dd.extract)return {text:dd.extract, source:`Wikipedia ${lang}`};}}}}catch{}return null;}
 async function searchWiktionary(q,lang){try{const res=await safeFetch(`https://${lang}.wiktionary.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*`);if(res){const d=await res.json();const f=d.query?.search?.[0];if(f?.snippet){let t=f.snippet.replace(/<[^>]*>/g,"");if(t.length>30)return {text:t, source:`Wiktionary ${lang}`};}}}catch{}return null;}
@@ -213,47 +162,7 @@ async function searchAllSources(q){
   }
   return null;
 }
-
-// القاعدة المعرفية الموسعة الكاملة
-const chatKnowledge=[
-  {roots:["الوضوء","طهارة"],reply:"نواقض الوضوء: الخارج من السبيلين، النوم العميق، زوال العقل، مس الفرج بشهوة، أكل لحم الإبل."},
-  {roots:["الصلاة"],reply:"الصلاة عماد الدين وشروطها الطهارة ودخول الوقت وستر العورة واستقبال القبلة."},
-  {roots:["الصيام","رمضان"],reply:"الصيام ركن وشروطه الإسلام والبلوغ والعقل والإقامة والصحة."},
-  {roots:["زكاة"],reply:"تجب الزكاة إذا بلغ النصاب وحال الحول 2.5%."},
-  {roots:["أحكام اليتامى", "كفالة اليتيم"], reply: "كافل اليتيم رفيق النبي صلى الله عليه وسلم في الجنة كهاتين وأشار بإصبعيه."},
-  {roots:["أحكام اللسان", "حفظ اللسان"], reply: "حفظ اللسان من الغيبة والنميمة والبهتان من أعظم وسائل النجاة من عذاب النار."},
-  {roots:["أحكام الستر", "ستر المسلم"], reply: "من ستر مسلماً في الدنيا ستره الله في الدنيا والآخرة، والجزاء من جنس العمل."},
-  {roots:["أحكام الظلم", "عاقبة الظلم"], reply: "اتقوا الظلم فإن الظلم ظلمات يوم القيامة، وادعوا لنصرة المظلوم وردع الظالم."},
-  {roots:["أحكام الحسد", "الحسد"], reply: "إياكم والحسد فإن الحسد يأكل الحسنات كما تأكل النار الحطب اليابس."},
-  {roots:["أحكام الكبر", "الكبر"], reply: "الكبر بطر الحق وغمط الناس، وهو مانع من قبول الحق ودخول الجنة مع الأتقياء."},
-  {roots:["أحكام الغيبة", "النميمة"], reply: "الغيبة والنميمة من الكبائر المحرمة التي تفسد المجتمعات وتورث عذاب القبر."},
-  {roots:["أحكام الرشوة", "الرشوة"], reply: "الرشوة والربا من أكبر الكبائر الموبقة المهلكة لصاحبها في الدنيا والآخرة."},
-  {roots:["أحكام السحر", "الكهانة"], reply: "من أتى كاهناً أو عرافاً فصدقه بما يقول فقد كفر بما أنزل على محمد صلى الله عليه وسلم."},
-  {roots:["أحكام الشهادة", "شهادة الزور"], reply: "شهادة الزور من أكبر الكبائر المهلكة بعد الإشراك بالله وعقوق الوالدين."},
-  {roots:["أحكام اليمين", "اليمين الغموس"], reply: "اليمين الغموس هي التي يقتطع بها مال امرئ مسلم بغير حق، وتغمس صاحبها بالنار."},
-  {roots:["أحكام القطيعة", "قطيعة الرحم"], reply: "لا يدخل الجنة قاطع رحم لحديث البخاري الصحيح، وصلتها تزيد في الأجل والرزق."},
-  {roots:["أحكام العقوق", "عقوق الوالدين"], reply: "عقوق الوالدين من أكبر الكبائر المهلكة، وبرهما من أحب الأعمال إلى الله تعالى."},
-  {roots:["أحكام التشبه"], reply: "لعن النبي صلى الله عليه وسلم المتشبهين من الرجال بالنساء والمتشبهات بالرجال."},
-  {roots:["أحكام النياحة"], reply: "النياحة ورفع الصوت بالويل والثبور على الميت من أعمال الجاهلية المحرمة."},
-  {roots:["أحكام الهجر"], reply: "لا يحل لمسلم أن يهجر أخاه فوق ثلاث ليال وخيرهما يبدأ بالسلام."},
-  {roots:["أحكام الغضب", "علاج الغضب"], reply: "ليس الشديد بالصرعة، بل الشديد الذي يملك نفسه عند الغضب، ولا تغضب ولك الجنة."},
-  {roots:["أحكام الرياء", "الرياء"], reply: "أخوف ما أخاف عليكم الشرك الأصغر وهو الرياء الذي يحبط صالح الأعمال يوم القيامة."},
-  {roots:["أحكام معروف", "تغيير المنكر"], reply: "تغيير المنكر باليد أو اللسان أو القلب من أصول الدين وإصلاح المجتمع المسلم."},
-  {roots:["أحكام النصيحة", "الدين النصيحة"], reply: "الدين النصيحة لله ولكتابه ولرسوله ولأئمة المسلمين وعامتهم بطلب الخير لهم."},
-  {roots:["أحكام الوفاء", "الوفاء بالعهد"], reply: "الوفاء بالعهد وحفظ ود الأصدقاء وصلة المودة من شيم الكرام الأبرار الصالحين."},
-  {roots:["أحكام الضيافة", "إكرام الضيف"], reply: "إكرام الضيف يوم وليلة، والضيافة ثلاثة أيام، وما زاد فهو صدقة تؤجر عليها."},
-  {roots:["أحكام صلة الرحم", "صلة الرحم", "ذات البين"], reply: "إصلاح ذات البين أفضل من درجة الصيام والصلاة، وفساد ذات البين هي الحالقة. وليس الواصل بالمكافئ، بل الواصل الذي إذا قطعت رحمه وصلها بالعفو والصفح."},
-  {roots:["أحكام الخدم", "الرفق بالخدم"], reply: "الرفق بالخدم والمماليك وإطعامهم مما تأكلون وتلبسون من توجيهات الإسلام السامية."},
-  {roots:["أحكام التوقير", "احترام الكبير"], reply: "توقير الكبير ورحمة الصغير من آداب الإسلام الرفيعة لحفظ تماسك المجتمع وأخلاقه."},
-  {roots:["أحكام الحلم", "الحلم والأناة"], reply: "الحلم والأناة صفات نبيلة يحبها الله، والتعجل من الشيطان في تصريف الأمور."},
-  {roots:["أحكام الصبر", "الصبر الجميل"], reply: "الصبر الجميل هو الذي لا شكوى فيه لغير الله، والرضا التام بالقدر المقدر بحكمة."},
-  {roots:["أحكام الرضا", "الرضا بالقدر"], reply: "عجباً لأمر المؤمن إن أمره كله خير، إن أصابته سرّاء شكر فكان خيراً له."},
-  {roots: ["الوقت", "أهمية الوقت", "تعبير عن الوقت", "الوقت وأهميته"], reply: "يعد الوقت من أثمن النعم التي يمتلكها الإنسان، فهو أساس النجاح والتقدم في الحياة.\n\nتكمن أهمية الوقت في أنه يساعد على تحقيق الأهداف وإنجاز الأعمال وتنظيم شؤون الحياة. ويمكن استغلاله من خلال وضع خطة يومية، وتحديد الأولويات، والابتعاد عن الملهيات، والالتزام بالمواعيد. كما أن استثمار الوقت في التعلم والعمل النافع يعود بالفائدة على الفرد والمجتمع.\n\nوفي الختام، فإن حسن استغلال الوقت هو مفتاح النجاح، لذلك يجب المحافظة عليه وعدم إضاعته فيما لا ينفع."},
-  {roots: ["الوطن", "حب الوطن", "تعبير عن حب الوطن", "تعبير عن الوطن"], reply: "الوطن ليس مجرد أرض نعيش فوقها، بل هو تاريخنا وذكرياتنا وهويتنا التي نفخر بها بين الأمم. فيه ولدنا، وعلى أرضه نشأنا، ومن خيراته نعيش ونحلم بمستقبل أفضل. لذلك فإن حب الوطن شعور فطري يسكن القلوب، ويجعل الإنسان متعلقًا بأرضه ومخلصًا لها مهما ابتعد عنها.\n\nيتجلى حب الوطن في المحافظة على ممتلكاته العامة، واحترام قوانينه، والعمل بجدٍ وإخلاص من أجل رفعته وتقدمه. فالمواطن الصالح لا يكتفي بالكلام عن حب وطنه، بل يترجمه إلى أفعال نافعة تساهم في تطوره وازدهاره. كما أن طلب العلم، ونشر الأخلاق الحسنة، ومساعدة الآخرين، كلها صور مشرقة من صور حب الوطن. وعندما يتعاون أبناء الوطن ويتحلون بروح المسؤولية، يصبح وطنهم أقوى وأكثر تقدمًا واستقرارًا.\n\nوالوطن يستحق منا الكثير، لأنه يمنحنا الأمن والانتماء والكرامة. لذلك يجب أن نحافظ عليه، وأن ندافع عنه، وأن نسعى دائمًا إلى ترك أثر طيب يساهم في بناء مستقبله المشرق للأجيال القادمة.\n\nوفي الختام، يبقى حب الوطن من أنبل المشاعر وأعظم القيم الإنسانية، فهو مصدر العزة والفخر لكل إنسان. ومن واجبنا أن نحافظ على وطننا ونخدمه بكل ما نستطيع، لأن ازدهاره هو ازدهار لنا جميعًا، ورفعته دليل على إخلاص أبنائه ووفائهم له."},
-  {roots: ["Alislamiah AI", "ماهي Alislamiah AI", "Alislamiah bing", "الإسلامية أي أي"], reply: "Alislamiah AI هو محرك البحث الذكي المطور بواسطة شبكة Alislamiah."},
-  {roots: ["Gemalot", "Gemalot AI", "جيمايلوت", "من أنت", "من انت"], reply: "Gemalot هو مساعدك الذكي الذاتي، تم تطويري بواسطة شبكة Alislamiah لخدمتك وإجابة استفساراتك."}
-];
-
+const chatKnowledge=[{roots:["الوضوء","طهارة"],reply:"نواقض الوضوء: الخارج من السبيلين، النوم العميق، زوال العقل، مس الفرج بشهوة، أكل لحم الإبل."},{roots:["الصلاة"],reply:"الصلاة عماد الدين وشروطها الطهارة ودخول الوقت وستر العورة واستقبال القبلة."},{roots:["الصيام","رمضان"],reply:"الصيام ركن وشروطه الإسلام والبلوغ والعقل والإقامة والصحة."},{roots:["زكاة"],reply:"تجب الزكاة إذا بلغ النصاب وحال الحول 2.5%."}];
 async function processMessage(text){
   if(!text)text=userInput.value.trim();if(!text)return;
   const check=canSendMessage();if(!check.allowed){const until=check.until;const diff=until-Date.now();const h=Math.floor(diff/3600000);const m=Math.floor((diff%3600000)/60000);const msg=`<b>${t.blockedTitle}</b><br><br>${t.blockedMsg.replace("{t}",check.limit)}<br><br>${t.waitTime.replace("{h}",h).replace("{m}",m)}<br><br><a href="subscription.html" style="color:#facc15">${t.subscribeNow}</a>`;appendMessage(msg,"blocked",false);updateLimitUI();return;}
@@ -272,15 +181,15 @@ async function processMessage(text){
   if(lower.startsWith("فيديو:")||lower.startsWith("video:")||lower.startsWith("انشئ فيديو")){
     let prompt=text.replace(/فيديو:|video:|انشئ فيديو:/i,"").trim();if(!prompt)prompt="sunset";
     appendMessage(text,"user");userInput.value="";incrementCount();updateLimitUI();updateSendIcon();
-    appendMessage(`🎬 جاري إنشاء الفيديو: "${prompt}"`,"ai",false);
-    const videoUrl=generateVideoCanvas(prompt);
-    const html=`<div>🎬 ${prompt}</div><video src="${videoUrl}" controls autoplay loop style="width:100%;border-radius:12px;margin-top:8px"></video><br><a href="${videoUrl}" target="_blank" style="display:inline-block;margin-top:6px;padding:4px 8px;border-radius:8px;background:#facc15;color:#111;text-decoration:none;font-size:11px">مشاهدة / تحميل HD</a>`;
-    appendMessage("", "ai", true, "Pollinations Video AI", html);
+    appendMessage(`🎬 جاري إنشاء فيديو: "${prompt}"`,"ai",false);
+    const videoUrl=await generateVideoCanvas(prompt);
+    const html=`<div>🎬 ${prompt}</div><video src="${videoUrl}" controls autoplay loop style="width:100%;border-radius:12px;margin-top:8px"></video><br><a href="${videoUrl}" download="gemalot_video.webm" style="display:inline-block;margin-top:6px;padding:4px 8px;border-radius:8px;background:#facc15;color:#111;text-decoration:none;font-size:11px">تحميل</a>`;
+    appendMessage("", "ai", true, "Canvas Video", html);
     if(lastVoiceInput){speakText("تم إنشاء الفيديو "+prompt);lastVoiceInput=false;}
     return;
   }
   if(lower.includes("حل")||lower.match(/[0-9x+\-*/^=]/)){
-    const mr=solveMathPro(text);if(mr){appendMessage(text,"user");userInput.value="";incrementCount();updateLimitUI();updateSendIcon();appendMessage(mr,"ai",true,"Math.js Engine");
+    const mr=solveMathPro(text);if(mr){appendMessage(text,"user");userInput.value="";incrementCount();updateLimitUI();updateSendIcon();appendMessage(mr,"ai",true,"Math.js");
     if(lastVoiceInput){speakText(mr);lastVoiceInput=false;}
     return;}
   }
@@ -306,6 +215,7 @@ let recognition=null;let voiceMode=false;let lastVoiceInput=false;
 function speakText(text){
   if(!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
+  // نظف النص من إيموجي و HTML
   let clean=text.replace(/<[^>]*>/g,'').replace(/[🎨🎬🧮✅🔍]/g,'').slice(0,300);
   const utter=new SpeechSynthesisUtterance(clean);
   utter.lang=currentLang==='ar'?'ar-SA':'en-US';
@@ -324,9 +234,10 @@ function toggleMic(){
     const transcript=e.results[0][0].transcript;
     userInput.value=transcript;
     updateSendIcon();
+    // إرسال تلقائي بعد ثانية مثل Gemini
     setTimeout(()=>{processMessage(transcript);},600);
   };
-  recognition.onerror=e=>{console.log(e);document.getElementById('micBtn').textContent='🎙️';document.getElementById('micBtn').style.background='transparent';recognition=null;};
+  recognition.onerror=e=>{console.log(e);document.getElementById('micBtn').textContent='🎙️️';document.getElementById('micBtn').style.background='transparent';recognition=null;};
   recognition.onend=()=>{if(recognition){recognition=null;document.getElementById('micBtn').textContent='🎙️';document.getElementById('micBtn').style.background='transparent';}};
 }
 if(userInput){
