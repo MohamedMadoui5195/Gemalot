@@ -88,7 +88,32 @@ async function searchWikidata(q){try{const url=`https://www.wikidata.org/w/api.p
 async function searchQuran(q){try{if(/قرآن|آية|سورة|quran|ayah/i.test(q)||q.length<40){const res=await safeFetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(q)}/all/ar`);if(res){const d=await res.json();const ayah=d.data?.matches?.[0]?.text;if(ayah)return{text:ayah,source:"Quran.com"};}}}catch{}return null;}
 async function searchOpenSearch(q,lang){try{const url=`https://${lang}.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(q)}&limit=1&format=json&origin=*`;const res=await safeFetch(url);if(res){const d=await res.json();if(d[2]?.[0])return{text:d[2][0],source:`OpenSearch ${lang.toUpperCase()}`};}}catch{}return null;}
 async function searchAllSources(q){const sources=[()=>searchWikipediaLang(q,currentLang),()=>searchWikipediaLang(q,"ar"),()=>searchWikipediaLang(q,"en"),()=>searchWikipediaLang(q,"fr"),()=>searchWikipediaLang(q,"es"),()=>searchDuckDuckGo(q),()=>searchWikidata(q),()=>searchOpenSearch(q,currentLang),()=>searchOpenSearch(q,"en"),()=>searchQuran(q)];for(let batch of[sources.slice(0,5),sources.slice(5)]){const results=await Promise.all(batch.map(fn=>fn()));const found=results.find(r=>r&&r.text&&r.text.length>30);if(found)return found;}return null;}
-const chatKnowledge=[{roots:["الوضوء","طهارة"],reply:{ar:"نواقض الوضوء: الخارج من السبيلين، النوم العميق، زوال العقل، مس الفرج بشهوة، وأكل لحم الإبل."}},{roots:["الصلاة"],reply:{ar:"الصلاة عماد الدين وشروطها الطهارة ودخول الوقت وستر العورة واستقبال القبلة."}},{roots:["الصيام","رمضان"],reply:{ar:"الصيام ركن وشروطه الإسلام والبلوغ والعقل والإقامة والصحة."}},{roots:["زكاة"],reply:{ar:"تجب الزكاة إذا بلغ النصاب وحال الحول بنسبة 2.5%."}}];
+const chatKnowledge=[{roots:["الوضوء","طهارة"],reply:{ar:"نواقض الوضوء: الخارج من السبيلين، النوم العميق، زوال العقل، مس الفرج بشهوة، وأكل لحم الإبل."}},{roots:["الصلاة"],reply:{ar:"الصلاة عماد الدين وشروطها الطهارة ودخول الوقت وستر العورة واستقبال القبلة."}},{roots:["الصيام","رمضان"],reply:{ar:"الصيام ركن وشروطه الإسلام والبلوغ والعقل والإقامة والصحة."}},{roots:["زكاة"],reply:{ar:"تجب الزكاة إذا بلغ النصاب وحال الحول بنسبة 2.5%."}
+
+},
+
+    { 
+      roots: ["الوقت", "أهمية الوقت", "تعبير عن الوقت", "الوقت وأهميته", "استثمار الوقت", "استغلال الوقت"], 
+      reply: "يعد الوقت من أثمن النعم التي يمتلكها الإنسان، فهو أساس النجاح والتقدم في الحياة.\n\nتكمن أهمية الوقت في أنه يساعد على تحقيق الأهداف وإنجاز الأعمال وتنظيم شؤون الحياة. ويمكن استغلاله من خلال وضع خطة يومية، وتحديد الأولويات، والابتعاد عن الملهيات، والالتزام بالمواعيد. كما أن استثمار الوقت في التعلم والعمل النافع يعود بالفائدة على الفرد والمجتمع.\n\nوفي الختام، فإن حسن استغلال الوقت هو مفتاح النجاح، لذلك يجب المحافظة عليه وعدم إضاعته فيما لا ينفع." 
+    },
+
+    { 
+      roots: ["الوطن", "حب الوطن", "تعبير عن حب الوطن", "تعبير عن الوطن", "أهمية الوطن", "واجبنا نحو الوطن"], 
+      reply: "الوطن ليس مجرد أرض نعيش فوقها، بل هو تاريخنا وذكرياتنا وهويتنا التي نفخر بها بين الأمم. فيه ولدنا، وعلى أرضه نشأنا، ومن خيراته نعيش ونحلم بمستقبل أفضل. لذلك فإن حب الوطن شعور فطري يسكن القلوب، ويجعل الإنسان متعلقًا بأرضه ومخلصًا لها مهما ابتعد عنها.\n\nيتجلى حب الوطن في المحافظة على ممتلكاته العامة، واحترام قوانينه، والعمل بجدٍ وإخلاص من أجل رفعته وتقدمه. فالمواطن الصالح لا يكتفي بالكلام عن حب وطنه، بل يترجمه إلى أفعال نافعة تساهم في تطوره وازدهاره. كما أن طلب العلم، ونشر الأخلاق الحسنة، ومساعدة الآخرين، كلها صور مشرقة من صور حب الوطن. وعندما يتعاون أبناء الوطن ويتحلون بروح المسؤولية، يصبح وطنهم أقوى وأكثر تقدمًا واستقرارًا.\n\nوالوطن يستحق منا الكثير، لأنه يمنحنا الأمن والانتماء والكرامة. لذلك يجب أن نحافظ عليه، وأن ندافع عنه، وأن نسعى دائمًا إلى ترك أثر طيب يساهم في بناء مستقبله المشرق للأجيال القادمة.\n\nوفي الختام، يبقى حب الوطن من أنبل المشاعر وأعظم القيم الإنسانية، فهو مصدر العزة والفخر لكل إنسان. ومن واجبنا أن نحافظ على وطننا ونخدمه بكل ما نستطيع، لأن ازدهاره هو ازدهار لنا جميعًا، ورفعته دليل على إخلاص أبنائه ووفائهم له." 
+    },
+    { 
+      roots: ["Alislamiah AI", "ماهي Alislamiah AI", "Alislamiah bing", "الإسلامية أي أي", "شبكة الإسلامية"], 
+      reply: "Alislamiah AI هو محرك البحث الذكي المطور بواسطة شبكة Alislamiah." 
+    },
+    { 
+      roots: ["Gemalot", "Gemalot AI", "جيمايلوت", "من أنت", "من انت"], 
+      reply: "Gemalot هو مساعدك الذكي الذاتي، تم تطويري بواسطة شبكة Alislamiah لخدمتك وإجابة استفساراتك." 
+    },
+
+
+
+
+];
 const chatContainer=document.getElementById('chatContainer');const userInput=document.getElementById('userInput');const sendBtn=document.getElementById('sendBtn');const fullGlow=document.getElementById('fullGlow');const chatList=document.getElementById('chatList');let currentChatId=null,messages=[];
 function selectModel(btn){if(btn.classList.contains('premium')){location.href='subscription.html';return;}document.querySelectorAll('.model-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
 function triggerFullGlow(){fullGlow.classList.remove('active');void fullGlow.offsetWidth;fullGlow.classList.add('active');}
