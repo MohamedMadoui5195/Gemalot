@@ -152,10 +152,10 @@ background-size:400% 400%;mix-blend-mode:screen;
 
 <div class="models-bar">
   <button class="model-btn active" onclick="selectModel(this)">Gemalot Normal</button>
-  <button class="model-btn locked">Gemalot Plus 🔒</button>
-  <button class="model-btn locked">Gemalot Bronze 🔒</button>
-  <button class="model-btn locked">Gemalot Silver 🔒</button>
-  <button class="model-btn locked">Gemalot Gold 🔒</button>
+  <button class="model-btn locked" onclick="goToSubscribe()">Gemalot Plus 🔒</button>
+  <button class="model-btn locked" onclick="goToSubscribe()">Gemalot Bronze 🔒</button>
+  <button class="model-btn locked" onclick="goToSubscribe()">Gemalot Silver 🔒</button>
+  <button class="model-btn locked" onclick="goToSubscribe()">Gemalot Gold 🔒</button>
 </div>
 
 <div id="sidebar" class="sidebar">
@@ -215,8 +215,15 @@ const chatList = document.getElementById('chatList');
 let currentChatId = null, messages = [];
 
 function selectModel(btn){
+  if(btn.classList.contains('locked')){
+    location.href = 'subscribe.html';
+    return;
+  }
   document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+}
+function goToSubscribe(){
+  location.href = 'subscribe.html';
 }
 function triggerFullGlow(){
   fullGlow.classList.remove('active');
