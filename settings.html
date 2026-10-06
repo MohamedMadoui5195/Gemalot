@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Settings - Gemalot</title>
@@ -18,13 +39,51 @@ body{background:#0b0f19;color:#fff;min-height:100vh;padding:20px}
 .link-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none;color:#e5e7eb;font-size:15px}
 .link-item:last-child{border-bottom:none}
 .link-item:hover{color:#facc15}
+.profile-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.profile-row:last-child{border-bottom:none}
+.profile-label{font-size:13px;color:#9ca3af}
+.profile-value{font-size:14px;color:#fff;font-weight:600;max-width:60%;text-align:left;word-break:break-all}
+.profile-value.masked{filter:blur(0px)}
+.input{width:100%;padding:10px;border-radius:10px;background:#1f2937;border:1px solid #374151;color:#fff;font-size:13px;margin-top:6px;outline:none}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(90deg,#facc15,#f97316);color:#111;font-weight:bold;cursor:pointer;margin-top:12px}
+.btn.secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.btn.danger{background:#7f1d1d;color:#fff}
+.small{font-size:11px;color:#9ca3af;margin-top:8px;line-height:1.5}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;background:rgba(34,197,94,.15);color:#22c55e;border:1px solid #22c55e}
+.eye{cursor:pointer;margin-right:6px;font-size:14px}
+.warning{background:rgba(239,68,68,.1);border:1px solid #ef4444;border-radius:12px;padding:12px;font-size:12px;color:#fca5a5;margin-top:12px;line-height:1.6}
 </style>
 </head>
 <body>
 <div class="header">
   <button class="back-btn" onclick="location.href='index.html'">←</button>
-  <h1 id="title">Settings</h1>
+  <h1 id="title">الإعدادات</h1>
 </div>
+
+<!-- الملف الشخصي الجديد -->
+<div class="card" id="profileCard">
+  <h3 id="profileTitle">👤 الملف الشخصي</h3>
+  <div class="profile-row">
+    <span class="profile-label" id="labelUsername">اسم المستخدم</span>
+    <span class="profile-value" id="valUsername">-</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label" id="labelEmail">الإيميل / الهاتف</span>
+    <span class="profile-value" id="valEmail">-</span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label" id="labelPassword">الباسورد المستعمل</span>
+    <span class="profile-value"><span id="valPassword">••••••••</span> <span class="eye" onclick="togglePass()">👁️</span></span>
+  </div>
+  <div class="profile-row">
+    <span class="profile-label">الحالة</span>
+    <span class="profile-value"><span class="badge" id="valStatus">نشط</span></span>
+  </div>
+  <div id="debugLS" class="small" style="word-break:break-all;margin-top:10px;color:#6b7280"></div>
+  <button class="btn danger" id="signOutBtn" onclick="signOut()">تسجيل خروج - Sign Out</button>
+  <div class="warning" id="warnText">⚠️ إذا تم تسجيل الخروج سيتم إنشاء حساب من البداية، وستفقد المحادثات والاشتراك المرتبط بهذا المستخدم في هذا الجهاز (LocalStorage).</div>
+</div>
+
 <div class="card">
   <h3 id="langTitle">اللغة / Language</h3>
   <div class="lang-buttons">
@@ -33,20 +92,83 @@ body{background:#0b0f19;color:#fff;min-height:100vh;padding:20px}
     <button class="lang-btn" data-lang="en" onclick="setLang('en')">En</button>
   </div>
 </div>
+
 <div class="card">
   <h3 id="aboutTitle">Alislamiah</h3>
   <a class="link-item" href="https://mohamedmadoui5195.github.io/Alislamiah-_net/about.html" target="_blank" id="aboutLink">عن Alislamiah <span>↗</span></a>
   <a class="link-item" href="https://mohamedmadoui5195.github.io/Alislamiah-services/" target="_blank" id="servicesLink">Alislamiah services <span>↗</span></a>
+  <a class="link-item" href="Activate.html" id="adminLink" style="display:none">لوحة الإدارة - تفعيل العملاء <span>⚙️</span></a>
 </div>
+
 <script>
 const texts = {
-  ar: { title:"الإعدادات", langTitle:"اللغة", aboutTitle:"Alislamiah", aboutLink:"عن Alislamiah", servicesLink:"خدمات Alislamiah", dir:"rtl" },
-  fr: { title:"Paramètres", langTitle:"Langue", aboutTitle:"Alislamiah", aboutLink:"À propos d'Alislamiah", servicesLink:"Services Alislamiah", dir:"ltr" },
-  en: { title:"Settings", langTitle:"Language", aboutTitle:"Alislamiah", aboutLink:"About Alislamiah", servicesLink:"Alislamiah services", dir:"ltr" }
+  ar: { title:"الإعدادات", langTitle:"اللغة", aboutTitle:"Alislamiah", aboutLink:"عن Alislamiah", servicesLink:"خدمات Alislamiah", profileTitle:"👤 الملف الشخصي", labelUsername:"اسم المستخدم المستعمل لتسجيل الدخول", labelEmail:"الإيميل أو الهاتف المستعمل", labelPassword:"الباسورد المستعمل", signOut:"تسجيل خروج", warn:"⚠️ إذا تم تسجيل الخروج سيتم إنشاء حساب من البداية، وستفقد المحادثات والاشتراك المرتبط بهذا المستخدم في هذا الجهاز.", statusActive:"نشط", dir:"rtl" },
+  fr: { title:"Paramètres", langTitle:"Langue", aboutTitle:"Alislamiah", aboutLink:"À propos d'Alislamiah", servicesLink:"Services Alislamiah", profileTitle:"👤 Profil", labelUsername:"Nom d'utilisateur", labelEmail:"Email ou téléphone utilisé", labelPassword:"Mot de passe utilisé", signOut:"Déconnexion", warn:"⚠️ Si vous vous déconnectez, un nouveau compte sera créé depuis le début.", statusActive:"Actif", dir:"ltr" },
+  en: { title:"Settings", langTitle:"Language", aboutTitle:"Alislamiah", aboutLink:"About Alislamiah", servicesLink:"Alislamiah services", profileTitle:"👤 Profile", labelUsername:"Username used to login", labelEmail:"Email or phone used", labelPassword:"Password used", signOut:"Sign Out", warn:"⚠️ If you sign out, a new account will be created from scratch.", statusActive:"Active", dir:"ltr" }
 };
+
+let showPass=false;
+let currentUsername="";
+let currentUserData=null;
+
+function getAllUsers(){
+  try{
+    const raw = localStorage.getItem("alislamiah_users") || localStorage.getItem("users") || "{}";
+    return JSON.parse(raw);
+  }catch{ return {}; }
+}
+
+function loadProfile(){
+  currentUsername = localStorage.getItem("alislamiah_current_user") || localStorage.getItem("current_user") || "";
+  const allUsers = getAllUsers();
+  // حاول إيجاد المستخدم بعدة طرق
+  if(allUsers[currentUsername]) currentUserData = allUsers[currentUsername];
+  else if(allUsers[currentUsername?.toLowerCase()]) currentUserData = allUsers[currentUsername.toLowerCase()];
+  
+  // إيميل / هاتف / باسورد قد يكون محفوظ مباشرة
+  const directEmail = localStorage.getItem("alislamiah_current_email") || localStorage.getItem("current_email") || currentUserData?.email || currentUserData?.phone || currentUserData?.emailOrPhone || "-";
+  const directPhone = localStorage.getItem("alislamiah_current_phone") || currentUserData?.phone || "";
+  const emailOrPhone = directEmail !== "-" ? directEmail : (directPhone || "-");
+  const password = localStorage.getItem("alislamiah_current_password") || localStorage.getItem("current_password") || currentUserData?.password || currentUserData?.pass || "-";
+
+  document.getElementById("valUsername").textContent = currentUsername || "غير مسجل";
+  document.getElementById("valEmail").textContent = emailOrPhone;
+  document.getElementById("valPassword").textContent = showPass ? password : "••••••••";
+  document.getElementById("valPassword").setAttribute("data-real", password);
+  document.getElementById("valStatus").textContent = currentUsername ? (texts[localStorage.getItem('gemalot_lang')||'ar']?.statusActive || "نشط") : "غير مسجل";
+  document.getElementById("debugLS").textContent = `LS: current_user=${currentUsername} | users_keys=${Object.keys(allUsers).length} | email=${emailOrPhone.slice(0,30)}`;
+
+  // إظهار رابط الإدارة فقط إذا أنت
+  if(currentUsername && (currentUsername.toLowerCase().includes("admin") || currentUsername==="alislamiah5195" || currentUsername==="Alislamiah Business")){
+    document.getElementById("adminLink").style.display="flex";
+  }
+}
+
+function togglePass(){
+  showPass=!showPass;
+  const real = document.getElementById("valPassword").getAttribute("data-real");
+  document.getElementById("valPassword").textContent = showPass ? real : "••••••••";
+}
+
+function signOut(){
+  const t = texts[localStorage.getItem('gemalot_lang')||'ar'];
+  if(!confirm(t.warn + "\n\nهل أنت متأكد من تسجيل الخروج؟\nسيتم حذف alislamiah_current_user من LocalStorage وسيطلب منك إنشاء حساب جديد.")) return;
+  // حسب ملاحظتك: إذا تم تسجيل الخروج سيتم إنشاء حساب من البداية
+  localStorage.removeItem("alislamiah_current_user");
+  localStorage.removeItem("alislamiah_current_email");
+  localStorage.removeItem("alislamiah_current_phone");
+  localStorage.removeItem("alislamiah_current_password");
+  localStorage.removeItem("current_user");
+  localStorage.removeItem("gemalot_subscription_active");
+  localStorage.removeItem("gemalot_subscription_expiry");
+  // لا نحذف المحادثات والاشتراكات العامة، فقط المستخدم الحالي
+  alert("تم تسجيل الخروج. سيتم توجيهك لإنشاء حساب جديد.");
+  location.href = "signin.html";
+}
 
 function setLang(lang) {
   localStorage.setItem('gemalot_lang', lang);
+  localStorage.setItem('gemalot_language', lang);
   applyLang(lang);
 }
 
@@ -57,15 +179,23 @@ function applyLang(lang) {
   document.getElementById('title').textContent = t.title;
   document.getElementById('langTitle').textContent = t.langTitle;
   document.getElementById('aboutTitle').textContent = t.aboutTitle;
+  document.getElementById('profileTitle').textContent = t.profileTitle;
+  document.getElementById('labelUsername').textContent = t.labelUsername;
+  document.getElementById('labelEmail').textContent = t.labelEmail;
+  document.getElementById('labelPassword').textContent = t.labelPassword;
+  document.getElementById('signOutBtn').textContent = t.signOut;
+  document.getElementById('warnText').textContent = t.warn;
   document.getElementById('aboutLink').innerHTML = t.aboutLink + ' <span>↗</span>';
   document.getElementById('servicesLink').innerHTML = t.servicesLink + ' <span>↗</span>';
   document.querySelectorAll('.lang-btn').forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-lang') === lang);
   });
+  loadProfile();
 }
 
-const saved = localStorage.getItem('gemalot_lang') || 'ar';
+const saved = localStorage.getItem('gemalot_lang') || localStorage.getItem('gemalot_language') || 'ar';
 applyLang(saved);
+loadProfile();
 </script>
-</body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
