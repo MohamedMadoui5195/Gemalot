@@ -68,28 +68,56 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   color:#111;
   border-color:transparent;
 }
+.model-btn.locked{
+  opacity:0.7;
+}
 .model-btn:hover:not(.active){
   background:rgba(255,255,255,.08);
 }
 
+/* القائمة من اليسار */
 .sidebar{
-  position:fixed;top:110px;right:0;
+  position:fixed;top:110px;left:0;
   width:280px;height:calc(100vh - 110px);
   background:#111827;
-  border-left:1px solid #1f2937;
+  border-right:1px solid #1f2937;
   z-index:900;
-  transform:translateX(100%);
+  transform:translateX(-100%);
   transition:transform .3s;
   overflow-y:auto;padding:16px;
 }
 .sidebar.open{transform:translateX(0)}
 .sidebar h3{font-size:15px;margin-bottom:12px;color:#facc15}
 .chat-item{
-  padding:12px;border-radius:12px;
-  background:#1f2937;margin-bottom:8px;
-  cursor:pointer;font-size:13px;color:#e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px;
+  border-radius:12px;
+  background:#1f2937;
+  margin-bottom:8px;
+  font-size:13px;
+  color:#e5e7eb;
 }
-.chat-item:hover{background:#374151}
+.chat-item .chat-title{
+  flex:1;
+  cursor:pointer;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  margin-left:8px;
+}
+.chat-item .chat-title:hover{color:#facc15}
+.delete-btn{
+  background:none;
+  border:none;
+  color:#ef4444;
+  font-size:16px;
+  cursor:pointer;
+  padding:4px 8px;
+  border-radius:6px;
+}
+.delete-btn:hover{background:rgba(239,68,68,.15)}
 .new-chat-btn{
   width:100%;padding:11px;border:none;border-radius:12px;
   background:linear-gradient(90deg,#facc15,#f97316);
@@ -145,32 +173,19 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   font-size:13px;font-weight:bold;
 }
 
-/* ===== تأثير التوهج (أصفر - برتقالي - أخضر - أزرق) ===== */
 .full-glow{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  pointer-events:none;
-  z-index:9999;
-  opacity:0;
-  background:linear-gradient(120deg,
-    #facc15 0%,
-    #f97316 25%,
-    #22c55e 50%,
-    #3b82f6 75%,
-    #facc15 100%
-  );
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:9999;opacity:0;
+  background:linear-gradient(120deg,#facc15 0%,#f97316 25%,#22c55e 50%,#3b82f6 75%,#facc15 100%);
   background-size:400% 400%;
   mix-blend-mode:screen;
 }
-.full-glow.active{
-  animation:fullGlowFlow 2s ease-in-out forwards;
-}
+.full-glow.active{animation:fullGlowFlow 2s ease-in-out forwards}
 @keyframes fullGlowFlow{
-  0%{background-position:0% 50%; opacity:0.75}
-  25%{background-position:40% 50%; opacity:0.9}
-  50%{background-position:80% 50%; opacity:0.8}
-  100%{background-position:0% 50%; opacity:0}
+  0%{background-position:0% 50%;opacity:0.75}
+  25%{background-position:40% 50%;opacity:0.9}
+  50%{background-position:80% 50%;opacity:0.8}
+  100%{background-position:0% 50%;opacity:0}
 }
 
 @media(max-width:768px){.sidebar{width:100%}}
@@ -178,7 +193,6 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 </head>
 <body>
 
-<!-- طبقة التوهج -->
 <div class="full-glow" id="fullGlow"></div>
 
 <div class="header">
@@ -193,14 +207,16 @@ body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   </div>
 </div>
 
-<!-- شريط النماذج -->
+<!-- النماذج: Normal مجاني | الباقي اشتراك -->
 <div class="models-bar">
-  <button class="model-btn active" data-model="plus" onclick="selectModel(this)">Gemalot Plus</button>
-  <button class="model-btn" data-model="bronze" onclick="selectModel(this)">Gemalot Bronze</button>
-  <button class="model-btn" data-model="silver" onclick="selectModel(this)">Gemalot Silver</button>
-  <button class="model-btn" data-model="gold" onclick="selectModel(this)">Gemalot Gold</button>
+  <button class="model-btn active" data-model="normal" onclick="selectModel(this)">Gemalot Normal</button>
+  <button class="model-btn locked" data-model="plus" onclick="goSubscription()">Gemalot Plus 🔒</button>
+  <button class="model-btn locked" data-model="bronze" onclick="goSubscription()">Gemalot Bronze 🔒</button>
+  <button class="model-btn locked" data-model="silver" onclick="goSubscription()">Gemalot Silver 🔒</button>
+  <button class="model-btn locked" data-model="gold" onclick="goSubscription()">Gemalot Gold 🔒</button>
 </div>
 
+<!-- القائمة من اليسار -->
 <div class="sidebar" id="sidebar">
   <button class="new-chat-btn" onclick="newChat()">+ محادثة جديدة</button>
   <h3>المحادثات السابقة</h3>
@@ -274,24 +290,17 @@ const chatList = document.getElementById('chatList');
 
 let currentChatId = null;
 let messages = [];
-let currentModel = localStorage.getItem('gemalot_model') || 'plus';
 
 function selectModel(btn) {
   document.querySelectorAll('.model-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  currentModel = btn.getAttribute('data-model');
-  localStorage.setItem('gemalot_model', currentModel);
+  localStorage.setItem('gemalot_model', 'normal');
 }
 
-document.querySelectorAll('.model-btn').forEach(btn => {
-  if (btn.getAttribute('data-model') === currentModel) {
-    btn.classList.add('active');
-  } else {
-    btn.classList.remove('active');
-  }
-});
+function goSubscription() {
+  window.location.href = 'subscription.html';
+}
 
-/* ===== تأثير التوهج ===== */
 function triggerFullGlow() {
   fullGlow.classList.remove('active');
   void fullGlow.offsetWidth;
@@ -304,23 +313,43 @@ function getChats() {
 function saveChats(chats) {
   localStorage.setItem("gemalot_chats", JSON.stringify(chats));
 }
+
 function renderChatList() {
   const chats = getChats();
   chatList.innerHTML = "";
   chats.forEach(c => {
     const div = document.createElement("div");
     div.className = "chat-item";
-    div.textContent = c.title || "محادثة بدون عنوان";
-    div.onclick = () => loadChat(c.id);
+    div.innerHTML = `
+      <span class="chat-title">${c.title || "محادثة بدون عنوان"}</span>
+      <button class="delete-btn" title="حذف">🗑️</button>
+    `;
+    div.querySelector('.chat-title').onclick = () => loadChat(c.id);
+    div.querySelector('.delete-btn').onclick = (e) => {
+      e.stopPropagation();
+      deleteChat(c.id);
+    };
     chatList.appendChild(div);
   });
 }
+
+function deleteChat(id) {
+  let chats = getChats();
+  chats = chats.filter(c => c.id !== id);
+  saveChats(chats);
+  if (currentChatId === id) {
+    newChat();
+  }
+  renderChatList();
+}
+
 function newChat() {
   currentChatId = Date.now().toString();
   messages = [];
   chatContainer.innerHTML = `<div class="welcome-box" id="welcomeBox"><h1>Gemalot</h1><p>كيف يمكنني مساعدتك؟</p></div>`;
   toggleSidebar();
 }
+
 function loadChat(id) {
   const chats = getChats();
   const chat = chats.find(c => c.id === id);
@@ -331,6 +360,7 @@ function loadChat(id) {
   messages.forEach(m => appendMessage(m.text, m.sender, false));
   toggleSidebar();
 }
+
 function saveCurrentChat() {
   if (!messages.length) return;
   const chats = getChats();
@@ -342,6 +372,7 @@ function saveCurrentChat() {
   saveChats(chats);
   renderChatList();
 }
+
 function toggleSidebar() {
   document.getElementById("sidebar").classList.toggle("open");
 }
@@ -376,32 +407,58 @@ function appendMessage(text, sender, save = true) {
   }
 }
 
-function processMessage() {
+/* بحث ويكيبيديا عند عدم وجود إجابة محلية */
+async function searchWikipedia(query) {
+  try {
+    const url = `https://ar.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.extract) {
+      return data.extract + (data.content_urls?.desktop?.page ? "\n\nالمصدر: " + data.content_urls.desktop.page : "");
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function processMessage() {
   const text = userInput.value.trim();
   if (!text) return;
 
-  triggerFullGlow(); // توهج عند الإرسال
-
+  triggerFullGlow();
   appendMessage(text, "user");
   userInput.value = "";
 
-  setTimeout(() => {
-    let reply = "عذراً، لم أتمكن من العثور على إجابة لهذا السؤال.";
-    for (let item of chatKnowledge) {
-      for (let root of item.roots) {
-        if (text.toLowerCase().includes(root.toLowerCase())) {
-          reply = item.reply;
-          break;
-        }
+  // 1) البحث في قاعدة المعرفة المحلية أولاً
+  let reply = null;
+  for (let item of chatKnowledge) {
+    for (let root of item.roots) {
+      if (text.toLowerCase().includes(root.toLowerCase())) {
+        reply = item.reply;
+        break;
       }
     }
-    appendMessage(reply, "ai");
-  }, 300);
+    if (reply) break;
+  }
+
+  // 2) إذا لم يجد → يبحث في الإنترنت (ويكيبيديا)
+  if (!reply) {
+    appendMessage("جاري البحث في الإنترنت...", "ai", false);
+    const wiki = await searchWikipedia(text);
+    // حذف رسالة "جاري البحث"
+    const lastMsg = chatContainer.querySelector('.message.ai:last-child');
+    if (lastMsg && lastMsg.textContent.includes("جاري البحث")) {
+      lastMsg.remove();
+    }
+    reply = wiki || "عذراً، لم أتمكن من العثور على إجابة لهذا السؤال في قاعدة المعرفة ولا على الإنترنت.";
+  }
+
+  appendMessage(reply, "ai");
 }
 
-// توهج عند الضغط على شريط الكتابة
 userInput.addEventListener("focus", triggerFullGlow);
-
 sendBtn.addEventListener("click", processMessage);
 userInput.addEventListener("keydown", e => {
   if (e.key === "Enter" && !e.shiftKey) {
