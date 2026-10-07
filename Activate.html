@@ -21,130 +21,91 @@
 :where(code, pre, kbd, samp) {
   font-family: "Optimistic Mono", ui-monospace, monospace;
 }
-</style><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>تفعيل العملاء</title>
+</style><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>تفعيل العملاء - Pro</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
-body{background:#0b0f19;color:#fff;min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}body{background:#0b0f19;color:#fff;min-height:100vh}
 .header{height:56px;background:linear-gradient(90deg,#facc15,#f97316,#22c55e,#3b82f6);display:flex;align-items:center;gap:12px;padding:0 14px;position:fixed;top:0;left:0;width:100%;z-index:1000}
 .header button{width:38px;height:38px;background:rgba(0,0,0,.25);border:none;border-radius:10px;color:#fff;cursor:pointer;font-size:18px}
-.container{max-width:600px;margin:80px auto;padding:16px}
+.container{max-width:650px;margin:80px auto;padding:16px}
 .card{background:#111827;border:1px solid #1f2937;border-radius:16px;padding:20px;margin-bottom:16px}
-.card h2{color:#facc15;font-size:15px;margin-bottom:12px}
-.label{font-size:13px;color:#9ca3af;margin-top:14px;display:block}
-.input{width:100%;padding:12px;border-radius:12px;background:#1f2937;border:1px solid #374151;color:#fff;font-size:14px;margin-top:6px;outline:none}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(90deg,#facc15,#f97316);color:#111;font-weight:bold;cursor:pointer;margin-top:14px}
+.card h2{color:#facc15;font-size:14px;margin-bottom:12px}
+.label{font-size:12px;color:#9ca3af;margin-top:12px;display:block}
+.input{width:100%;padding:11px;border-radius:12px;background:#1f2937;border:1px solid #374151;color:#fff;font-size:13px;margin-top:6px;outline:none}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(90deg,#facc15,#f97316);color:#111;font-weight:bold;cursor:pointer;margin-top:12px}
 .btn.secondary{background:#1f2937;color:#fff;border:1px solid #374151}
-.small{font-size:12px;color:#9ca3af;margin-top:8px;line-height:1.6}
+.small{font-size:11px;color:#9ca3af;margin-top:8px;line-height:1.6}
 .list{max-height:400px;overflow:auto;margin-top:10px;background:#0b0f19;border-radius:10px;padding:10px}
-.list-item{padding:10px;border-bottom:1px solid #1f2937;font-size:12px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.list-item{padding:8px;border-bottom:1px solid #1f2937;font-size:11px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.hint{background:#0b0f19;border:1px solid #1f2937;border-radius:10px;padding:10px;font-size:10px;color:#6b7280;margin-top:8px;line-height:1.6}
 </style>
 </head>
 <body>
-<div class="header"><button onclick="location.href='index.html'">←</button><div style="font-weight:bold">تفعيل العملاء - الإدارة</div></div>
+<div class="header"><button onclick="location.href='index.html'">←</button><div style="font-weight:bold">تفعيل العملاء - Pro بدون سيرفر</div></div>
 <div class="container">
-  <div class="card">
-    <h2>✅ تفعيل عميل</h2>
-
-    <span class="label">إسم المستخدم</span>
-    <input id="username" class="input" placeholder="مثال: Mohamed Madoui">
-
-    <span class="label">الإيميل المستعمل</span>
-    <input id="email" class="input" placeholder="مثال: alislamiah5195@gmail.com">
-
-    <span class="label">المرتبة</span>
-    <select id="plan" class="input">
-      <option value="plus">Plus</option>
-      <option value="bronze">Bronze</option>
-      <option value="silver">Silver</option>
-      <option value="gold">Gold</option>
-    </select>
-
-    <span class="label">المدة (بالأيام) - أنت تحددها</span>
-    <input id="days" class="input" type="number" placeholder="مثال: 30">
-
-    <span class="label">عدد الرسائل اليومية - أنت تحدده</span>
-    <input id="dailyLimit" class="input" type="number" placeholder="مثال: 50">
-
-    <button class="btn" onclick="activate()">⚡ تفعيل</button>
-    <div id="msg" class="small"></div>
-  </div>
-
-  <div class="card">
-    <h2>📩 طلبات الزبائن</h2>
-    <div id="reqList" class="list">لا يوجد</div>
-  </div>
-
-  <div class="card">
-    <h2>👥 المفعلين</h2>
-    <div id="subsList" class="list">لا يوجد</div>
-    <div style="display:flex;gap:8px;margin-top:8px"><button class="btn secondary" onclick="renderSubs()">تحديث</button><button class="btn secondary" onclick="exportData()">تصدير</button></div>
-  </div>
+<div class="card">
+<h2>✅ تفعيل عميل - الرسائل الجديدة</h2>
+<span class="label">إسم المستخدم</span><input id="username" class="input" placeholder="Madoui Mohamed">
+<span class="label">الإيميل المستعمل</span><input id="email" class="input" placeholder="alislamiah5195@gmail.com">
+<span class="label">المرتبة - تختارها أنت (تحدد الرسائل تلقائيا)</span>
+<select id="plan" class="input" onchange="autoFill()">
+<option value="normal">عادي - 25 رسالة/يوم</option>
+<option value="plus">Plus - 45 رسالة/يوم</option>
+<option value="bronze">Bronze - 65 رسالة/يوم</option>
+<option value="silver">Silver - 75 رسالة/يوم</option>
+<option value="gold">Gold - 100 رسالة/يوم</option>
+</select>
+<span class="label">المدة (بالأيام) - أنت تحددها</span><input id="days" class="input" type="number" placeholder="مثال: 90">
+<span class="label">عدد الرسائل اليومية - يمتلئ تلقائيا حسب المرتبة، ويمكنك تعديله</span><input id="dailyLimit" class="input" type="number" placeholder="مثال: 45">
+<span class="label">السعر (اختياري)</span><input id="price" class="input" type="number" placeholder="مثال: 25">
+<button class="btn" onclick="activate()">⚡ تفعيل - بدون سيرفر</button>
+<div id="msg" class="small"></div>
+<div class="hint">التسعيرة الجديدة:<br>Plus 45 رسالة: 3ش=25$ 6ش=50$ 9ش=75$ عام=100$<br>Bronze 65 رسالة: شهرين=30$ 5ش=60$ 8ش=90$ عام=120$<br>Silver 75 رسالة: شهر=50$ 3ش=100$ 5ش=120$ 9ش=150$ عام=200$<br>Gold 100 رسالة: شهر=60$ 3ش=120$ 5ش=160$ 9ش=200$ عام=240$</div>
 </div>
-
+<div class="card"><h2>📩 طلبات</h2><div id="reqList" class="list">لا يوجد</div></div>
+<div class="card"><h2>👥 المفعلين</h2><div id="subsList" class="list">لا يوجد</div><div style="display:flex;gap:8px;margin-top:8px"><button class="btn secondary" onclick="renderSubs()">تحديث</button><button class="btn secondary" onclick="exportData()">تصدير</button></div></div>
+</div>
 <script>
-function getLS(k){ return localStorage.getItem(k); }
-function getJSON(k){ try{return JSON.parse(localStorage.getItem(k)||"{}")}catch{return {}} }
-
+const planLimits={normal:25, plus:45, bronze:65, silver:75, gold:100};
+function autoFill(){const p=document.getElementById('plan').value;document.getElementById('dailyLimit').value=planLimits[p]||25;}
+function getLS(k){return localStorage.getItem(k);}function getJSON(k){try{return JSON.parse(localStorage.getItem(k)||"{}")}catch{return {}}}
 function activate(){
   const username=document.getElementById('username').value.trim();
   const email=document.getElementById('email').value.trim();
   const plan=document.getElementById('plan').value;
   const days=parseInt(document.getElementById('days').value);
   const dailyLimit=parseInt(document.getElementById('dailyLimit').value);
+  const price=document.getElementById('price').value;
   const msg=document.getElementById('msg');
-
-  if(!username){ msg.innerHTML="<span style='color:#ef4444'>اكتب إسم المستخدم</span>"; return; }
-  if(!email){ msg.innerHTML="<span style='color:#ef4444'>اكتب الإيميل</span>"; return; }
-  if(!days || days<=0){ msg.innerHTML="<span style='color:#ef4444'>اكتب المدة بالأيام</span>"; return; }
-  if(!dailyLimit || dailyLimit<=0){ msg.innerHTML="<span style='color:#ef4444'>اكتب عدد الرسائل اليومية</span>"; return; }
-
-  const expiry = (Date.now()+days*24*60*60*1000).toString();
+  if(!username||!email||!days||!dailyLimit){msg.innerHTML="<span style='color:#ef4444'>املأ كل الحقول</span>";return;}
+  const expiry=(Date.now()+days*24*60*60*1000).toString();
   const allSubs=getJSON("gemalot_all_subscriptions");
-  allSubs[username]={
-    active:true,
-    email:email,
-    plan:plan,
-    days:days,
-    dailyLimit:dailyLimit,
-    expiry:expiry,
-    activatedAt:Date.now()
-  };
-  localStorage.setItem("gemalot_all_subscriptions", JSON.stringify(allSubs));
-  // حفظ الحد اليومي بشكل منفصل ليسهل قراءته من index
-  localStorage.setItem("gemalot_custom_daily_limit_"+username, dailyLimit.toString());
-
-  msg.innerHTML=`<span style='color:#22c55e'>✅ تم تفعيل<br>الإسم: ${username}<br>الإيميل: ${email}<br>المرتبة: ${plan.toUpperCase()}<br>المدة: ${days} يوم<br>الرسائل اليومية: ${dailyLimit}</span>`;
-  document.getElementById('username').value="";
-  document.getElementById('email').value="";
-  document.getElementById('days').value="";
-  document.getElementById('dailyLimit').value="";
-  renderSubs(); renderReqs();
+  allSubs[username]={active:true,email,plan,days,dailyLimit,price,expiry,activatedAt:Date.now()};
+  localStorage.setItem("gemalot_all_subscriptions",JSON.stringify(allSubs));
+  localStorage.setItem("gemalot_custom_daily_limit_"+username,dailyLimit.toString());
+  msg.innerHTML=`<span style='color:#22c55e'>✅ تم تفعيل<br>الإسم: ${username}<br>الإيميل: ${email}<br>المرتبة: ${plan.toUpperCase()}<br>الرسائل: ${dailyLimit}/يوم<br>المدة: ${days} يوم<br>السعر: ${price}$</span>`;
+  document.getElementById('username').value="";document.getElementById('email').value="";document.getElementById('days').value="";document.getElementById('price').value="";
+  renderSubs();renderReqs();
 }
-
 function renderReqs(){
   const reqs=JSON.parse(getLS("gemalot_sub_requests")||"[]");
   const div=document.getElementById('reqList');
-  if(!reqs.length){ div.innerHTML="لا يوجد طلبات"; return; }
-  div.innerHTML=reqs.map(r=>`<div class="list-item"><div><b>${r.user}</b><br><small>${r.plan} - ${r.days||""} يوم - ${r.status}</small></div><button onclick="fillFromReq('${r.user}')" style="background:none;border:1px solid #22c55e;color:#22c55e;border-radius:6px;padding:4px 8px;cursor:pointer">تفعيل</button></div>`).join("");
+  if(!reqs.length){div.innerHTML="لا يوجد";return;}
+  div.innerHTML=reqs.map(r=>`<div class="list-item"><div><b>${r.user.slice(0,25)}</b><br><small>${r.plan.toUpperCase()} ${r.dailyLimit||""} رسالة ${r.days} يوم ${r.price}$ ${r.status}</small></div><button onclick="fillReq('${r.user}','${r.plan}','${r.days}','${r.dailyLimit}','${r.price}')" style="background:none;border:1px solid #22c55e;color:#22c55e;border-radius:6px;padding:4px 8px;cursor:pointer">تفعيل</button></div>`).join("");
 }
-function fillFromReq(user){
-  document.getElementById('username').value=user;
-  window.scrollTo({top:0,behavior:"smooth"});
-}
+function fillReq(u,p,d,l,pr){document.getElementById('username').value=u;document.getElementById('plan').value=p;document.getElementById('days').value=d;document.getElementById('dailyLimit').value=l;document.getElementById('price').value=pr;window.scrollTo({top:0,behavior:"smooth"});}
 function renderSubs(){
   const subs=getJSON("gemalot_all_subscriptions");
   const div=document.getElementById('subsList');
   const keys=Object.keys(subs);
-  if(!keys.length){ div.innerHTML="لا يوجد"; return; }
+  if(!keys.length){div.innerHTML="لا يوجد";return;}
   div.innerHTML=keys.map(k=>{
-    const s=subs[k];
-    const exp=new Date(parseInt(s.expiry)).toLocaleString();
-    return `<div class="list-item"><div><b>${k}</b><br><small>${s.email||""} | ${s.plan.toUpperCase()} | ${s.days} يوم | ${s.dailyLimit} رسالة/يوم | ${exp}</small></div><button onclick="revoke('${k}')" style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:2px 6px;cursor:pointer">إلغاء</button></div>`;
+    const s=subs[k];const exp=new Date(parseInt(s.expiry)).toLocaleString();
+    return `<div class="list-item"><div><b>${k}</b><br><small>${s.email||""} | ${s.plan.toUpperCase()} | ${s.dailyLimit} رسالة | ${s.days} يوم | ${s.price||""}$ | ${exp}</small></div><button onclick="revoke('${k}')" style="background:none;border:1px solid #ef4444;color:#ef4444;border-radius:6px;padding:2px 6px;cursor:pointer">إلغاء</button></div>`;
   }).join("");
 }
-function revoke(user){ if(!confirm("إلغاء "+user+"؟")) return; const subs=getJSON("gemalot_all_subscriptions"); delete subs[user]; localStorage.setItem("gemalot_all_subscriptions", JSON.stringify(subs)); localStorage.removeItem("gemalot_custom_daily_limit_"+user); renderSubs(); }
-function exportData(){ const data=getLS("gemalot_all_subscriptions")||"{}"; const blob=new Blob([data],{type:"application/json"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="subs.json"; a.click(); }
-renderReqs(); renderSubs();
+function revoke(u){if(!confirm("إلغاء "+u+"؟"))return;const subs=getJSON("gemalot_all_subscriptions");delete subs[u];localStorage.setItem("gemalot_all_subscriptions",JSON.stringify(subs));localStorage.removeItem("gemalot_custom_daily_limit_"+u);renderSubs();}
+function exportData(){const data=getLS("gemalot_all_subscriptions")||"{}";const blob=new Blob([data],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="subs_pro.json";a.click();}
+autoFill();renderReqs();renderSubs();
 </script>
 <script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
