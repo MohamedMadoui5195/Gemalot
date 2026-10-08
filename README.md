@@ -145,10 +145,35 @@ function askVideoGen(){const p=prompt("وصف الفيديو:");if(p)processMess
 function insertPrompt(txt){userInput.value=txt;userInput.focus();updateSendIcon();}
 function generateImagePollinations(prompt){
   const seed=Math.floor(Math.random()*999999);
-  const enc=encodeURIComponent(String(prompt).trim());
-  // توليد صورة حقيقي عبر Pollinations (بدون مفتاح)
+  // وصف إنجليزي واضح حتى لا يخطئ النموذج
+  let p=String(prompt||'').trim();
+  if(!p) p='beautiful landscape';
+  p = p + ', highly detailed, realistic, 4k, no text, no watermark';
+  const enc=encodeURIComponent(p);
   return `https://image.pollinations.ai/prompt/${enc}?width=1024&height=1024&seed=${seed}&nologo=true&enhance=true&model=flux`;
 }
+async function toEnglishPrompt(arText){
+  try{
+    const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(arText)+'&langpair=ar|en');
+    const d=await r.json();
+    const t=d&&d.responseData&&d.responseData.translatedText;
+    if(t && t.trim() && t.trim().toLowerCase()!==arText.trim().toLowerCase()) return t.trim();
+  }catch(e){}
+  // قاموس بسيط احتياطي
+  const dict={
+    'مسجد':'mosque','مستقبلي':'futuristic','جامع':'mosque','كعبة':'Kaaba',
+    'بحر':'sea','جبل':'mountain','غروب':'sunset','شروق':'sunrise',
+    'مدينة':'city','صحراء':'desert','قمر':'moon','سماء':'sky',
+    'بيت':'house','قصر':'palace','حديقة':'garden','وردة':'rose',
+    'قطة':'cat','كلب':'dog','حصان':'horse','سيارة':'car'
+  };
+  let out=arText;
+  for(const [a,e] of Object.entries(dict)){ out=out.split(a).join(e); }
+  // إن بقي عربي كثير ارجع وصف عام مع الكلمات الإنجليزية المستخرجة
+  if(/[\u0600-\u06FF]/.test(out) && out===arText) return 'futuristic islamic mosque architecture, exterior view, detailed';
+  return out.replace(/[\u0600-\u06FF]+/g,' ').replace(/\s+/g,' ').trim() || 'detailed scene';
+}
+
 function generateVideoCanvas(prompt){const canvas=document.createElement("canvas");canvas.width=640;canvas.height=360;const ctx=canvas.getContext("2d");let frame=0;return new Promise(resolve=>{const stream=canvas.captureStream(30);const recorder=new MediaRecorder(stream,{mimeType:"video/webm"});const chunks=[];recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{const blob=new Blob(chunks,{type:"video/webm"});resolve(URL.createObjectURL(blob));};recorder.start();function draw(){ctx.fillStyle=`hsl(${(frame*2)%360},70%,30%)`;ctx.fillRect(0,0,640,360);ctx.fillStyle="#fff";ctx.font="bold 24px Arial";ctx.textAlign="center";ctx.fillText(prompt.slice(0,40),320,180);ctx.font="14px Arial";ctx.fillText(`Gemalot Video - ${frame}`,320,210);frame++;if(frame<60){requestAnimationFrame(draw);}else{setTimeout(()=>recorder.stop(),200);}}draw();});}
 function solveMathPro(text){try{let expr=text.replace("حل المعادلة:","").replace("حل:","").replace("solve:","").trim();if(!expr)return null;if(expr.includes("=")){const parts=expr.split("=");if(parts.length===2){const left=parts[0].trim();const right=parts[1].trim();if(left.toLowerCase().includes("x")){try{const eq=math.parse(left+" - ("+right+")");for(let x=-100;x<=100;x+=0.5){const v=eq.evaluate({x});if(Math.abs(v)<0.001){return `🧮 الحل العفوي:\n${expr}\n\nالخطوات:\n${left} = ${right}\n${left} - ${right} = 0\nنجرب x=${x}\nالتحقق: ${math.evaluate(left,{x})} ≈ ${right}\n\nالجواب: x = ${x} ✅`;}}}catch{}}try{const r=math.evaluate(right);const l=math.evaluate(left);return `اليمين = ${r}\nاليسار = ${l}`;}catch{}}}const res=math.evaluate(expr);return `🧮 حل عفوي:\n${expr} = ${res}\nالخطوات: طبقت الأولويات → الناتج ${res} ✅`;}catch{return null;}}
 async function safeFetch(url){try{const r=await fetch(url);if(!r.ok)return null;return r;}catch{return null;}}
@@ -202,14 +227,26 @@ async function processMessage(text){
   const check=canSendMessage();if(!check.allowed){const until=check.until;const diff=until-Date.now();const h=Math.floor(diff/3600000);const m=Math.floor((diff%3600000)/60000);const msg=`<b>${t.blockedTitle}</b><br><br>${t.blockedMsg.replace("{t}",check.limit)}<br><br>${t.waitTime.replace("{h}",h).replace("{m}",m)}<br><br><a href="subscription.html" style="color:#facc15">${t.subscribeNow}</a>`;appendMessage(msg,"blocked",false);updateLimitUI();return;}
   triggerFullGlow();
   const lower=text.toLowerCase();
-  if(lower.startsWith("صورة:")||lower.startsWith("صوره:")||lower.startsWith("image:")||lower.startsWith("انشئ صورة")||lower.startsWith("أنشئ صورة")||lower.includes("generate image")){
-    let prompt=text.replace(/صورة:|صوره:|image:|انشئ صورة:/i,"").trim();if(!prompt)prompt="beautiful landscape";
+  if(/^(صورة|صوره|image)\s*[:：]/i.test(text)||/انشئ\s*صورة|أنشئ\s*صورة|generate\s*image/i.test(text)){
+    let prompt=text
+      .replace(/^(أنشئ|انشئ)\s*صورة\s*[:：]?\s*/i,"")
+      .replace(/^صورة\s*[:：]?\s*/i,"")
+      .replace(/^صوره\s*[:：]?\s*/i,"")
+      .replace(/^image\s*[:：]?\s*/i,"")
+      .replace(/^generate\s*image\s*[:：]?\s*/i,"")
+      .trim();
+    if(!prompt) prompt="futuristic mosque";
     appendMessage(text,"user");userInput.value="";incrementCount();updateLimitUI();updateSendIcon();
     appendMessage(`🎨 جاري إنشاء صورة: "${prompt}"`,"ai",false);
-    const imgUrl=generateImagePollinations(prompt);
-    const html=`<div>🎨 ${prompt}</div><img src="${imgUrl}" loading="lazy" style="width:100%;border-radius:12px;margin-top:8px" onclick="openEditor(this.src)"><br><div style="margin-top:6px;display:flex;gap:6px"><button onclick="openEditor('${imgUrl}')" style="padding:4px 8px;border-radius:8px;border:1px solid #facc15;background:transparent;color:#facc15;font-size:11px">تعديل</button><a href="${imgUrl}" target="_blank" style="padding:4px 8px;border-radius:8px;background:#facc15;color:#111;text-decoration:none;font-size:11px">تحميل 4K</a></div>`;
+    // ترجمة الوصف للعربية→إنجليزي حتى يفهم مولّد الصور
+    let eng=prompt;
+    if(/[\u0600-\u06FF]/.test(prompt)){
+      eng=await toEnglishPrompt(prompt);
+    }
+    const imgUrl=generateImagePollinations(eng);
+    const html=`<div>🎨 ${prompt}</div><img src="${imgUrl}" loading="lazy" style="width:100%;border-radius:12px;margin-top:8px" onerror="this.alt='تعذر تحميل الصورة';this.style.background='#eee';this.style.minHeight='120px';" onclick="openEditor(this.src)"><br><div style="margin-top:6px;display:flex;gap:6px"><button onclick="openEditor('${imgUrl}')" style="padding:4px 8px;border-radius:8px;border:1px solid #facc15;background:transparent;color:#facc15;font-size:11px">تعديل</button><a href="${imgUrl}" target="_blank" style="padding:4px 8px;border-radius:8px;background:#facc15;color:#111;text-decoration:none;font-size:11px">تحميل 4K</a></div>`;
     appendMessage("", "ai", true, "Pollinations AI", html);
-    if(lastVoiceInput){speakText("تم إنشاء الصورة "+prompt);lastVoiceInput=false;}
+    if(lastVoiceInput){speakText("تم إنشاء الصورة");lastVoiceInput=false;}
     return;
   }
   if(lower.startsWith("فيديو:")||lower.startsWith("video:")||lower.startsWith("انشئ فيديو")){
