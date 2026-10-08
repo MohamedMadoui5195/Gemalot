@@ -61,7 +61,7 @@
 </style>
 </head>
 <body>
-<div class="header"><div class="header-title">Gemalot</div><div class="header-actions"><div id="msgCounter" class="counter-badge">25/25</div><button id="settingsBtn" class="menu-btn">⚙️</button><button class="menu-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button></div></div>
+<div class="header"><div class="header-title">Gemalot</div><div class="header-actions"><div id="msgCounter" class="counter-badge">25/25</div><button id="settingsBtn" class="menu-btn" onclick="location.href='settings.html'">⚙️</button><button class="menu-btn" onclick="toggleSidebar()"><span></span><span></span><span></span></button></div></div>
 <div class="models-bar">
 <button class="model-btn active" onclick="selectModel(this)">Gemalot Normal</button>
 <button class="model-btn locked" onclick="location.href='subscription.html'">Plus 45 🔒</button>
@@ -124,7 +124,7 @@ function appendMessage(text,sender,save=true,source,htmlContent){
   const div=document.createElement("div");div.className=`message ${sender}`;
   if(htmlContent){div.innerHTML=htmlContent;}
   else if(sender==="blocked"){div.innerHTML=text;}
-  else{div.innerHTML="";const span=document.createElement("span");span.textContent=text;div.appendChild(span);if(source){const tag=document.createElement("span");tag.className="source-tag";tag.textContent=`المصدر: ${source}`;div.appendChild(document.createElement("br"));div.appendChild(tag");}}
+  else{div.innerHTML="";const span=document.createElement("span");span.textContent=text;div.appendChild(span);if(source){const tag=document.createElement("span");tag.className="source-tag";tag.textContent=`المصدر: ${source}`;div.appendChild(document.createElement("br"));div.appendChild(tag);}}
   chatContainer.appendChild(div);window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
   if(save&&sender!=="blocked"){messages.push({text,sender,source,html:htmlContent||null});if(!currentChatId)currentChatId=Date.now().toString();saveCurrentChat();}
 }
@@ -164,38 +164,48 @@ function generateVideoCanvas(prompt){
 // 3) حل المعادلات والعمليات الرياضية
 function solveMathPro(text){
   try {
-    let expr = text.replace("حل المعادلة:", "").replace("حل:", "").replace("solve:", "").trim();
+    let expr = text.replace(/حل\s*المعادلة\s*:?/gi,"").replace(/حل\s*:/gi,"").replace(/solve\s*:/gi,"").replace(/احسب\s*:?/gi,"").trim();
     if (!expr) return null;
-
+    // detect pure math / equation
+    if (!/[=+\-*/^√π0-9xX×÷]/.test(expr)) return null;
+    expr = expr.replace(/×/g,"*").replace(/÷/g,"/").replace(/√/g,"sqrt").replace(/π/gi,"pi").replace(/(\d)\s*\(/g,"$1*(").replace(/\)\s*(\d)/g,")*$1");
     if (expr.includes("=")) {
       const parts = expr.split("=");
-      if (parts.length === 2) {
-        const left = parts[0].trim();
-        const right = parts[1].trim();
-        if (left.toLowerCase().includes("x") || right.toLowerCase().includes("x")) {
-          try {
-            const eq = math.parse(`(${left}) - (${right})`);
-            let solvedX = null;
-            for (let x = -100; x <= 100; x += 0.1) {
-              if (Math.abs(eq.evaluate({ x })) < 0.001) {
-                solvedX = Math.round(x * 100) / 100;
-                break;
-              }
-            }
-            if (solvedX !== null) {
-              return `🧮 حل المعادلة:\n${expr}\n\nالخطوات:\n1) إعادة ترتيب المعادلة: (${left}) - (${right}) = 0\n2) إيجاد القيمة المجهولة x\n\nالنتيجة النهائيّة ✅: x = ${solvedX}`;
-            }
-          } catch(e) {}
+      if (parts.length !== 2) return null;
+      let left = parts[0].trim(), right = parts[1].trim();
+      // linear: a*x + b = c  using math.js
+      const hasX = /x/i.test(left) || /x/i.test(right);
+      if (hasX) {
+        // f(x)=left-right, try nerdamer-free method: isolate via evaluate at 0 and 1 for linear
+        const f = (x) => {
+          try { return math.evaluate(`(${left})-(${right})`, {x:x, X:x}); } catch(e){ return NaN; }
+        };
+        const f0 = f(0), f1 = f(1);
+        if (isFinite(f0) && isFinite(f1) && Math.abs(f1-f0)>1e-12) {
+          // linear assumption: f(x)=a*x+b
+          const a = f1 - f0, b = f0;
+          const x = -b / a;
+          const xr = Math.round(x * 1e6) / 1e6;
+          return `🧮 حل المعادلة:\n${parts[0].trim()} = ${parts[1].trim()}\n\nالنتيجة ✅: x = ${xr}`;
         }
+        // fallback numeric search
+        let solvedX = null;
+        for (let x = -1000; x <= 1000; x += 0.05) {
+          if (Math.abs(f(x)) < 0.01) { solvedX = Math.round(x * 100) / 100; break; }
+        }
+        if (solvedX !== null) return `🧮 حل المعادلة:\n${expr}\n\nالنتيجة ✅: x = ${solvedX}`;
+        return null;
       }
+      // no x: compare two sides
+      const L = math.evaluate(left), R = math.evaluate(right);
+      return `🧮 مقارنة الطرفين:\n${left} = ${L}\n${right} = ${R}\n${Math.abs(L-R)<1e-9 ? "الطرفان متساويان ✅" : "الطرفان غير متساويين"}`;
     }
     const res = math.evaluate(expr);
-    if (res !== undefined && !isNaN(res)) {
-      return `🧮 ناتج العملية الحسابية:\n${expr} = ${res}\nالنتيجة ✅: ${res}`;
+    if (typeof res === "number" && isFinite(res)) {
+      return `🧮 ناتج العملية:\n${expr} = ${res}\nالنتيجة ✅: ${res}`;
     }
-  } catch(e) {
-    return null;
-  }
+    if (res !== undefined) return `🧮 النتيجة ✅: ${res}`;
+  } catch(e) { return null; }
   return null;
 }
 
@@ -310,6 +320,8 @@ const chatKnowledge=[
     { roots: ["أحكام الرياء"], reply: "أخوف ما أخاف عليكم الشرك الأصغر وهو الرياء الذي يحبط صالح الأعمال يوم القيامة." },
     { roots: ["أحكام المعروف"], reply: "تغيير المنكر باليد أو اللسان أو القلب من أصول الدين وإصلاح المجتمع المسلم." },
     { roots: ["أحكام النصيحة"], reply: "الدين النصيحة لله ولكتابه ولرسوله ولأئمة المسلمين وعامتهم بطلب الخير لهم." },
+    { roots: ["أحكام الوفاء"], reply: "الوفاء بالعهد وحفظ ود الأصدقاء وصلة المودة من شيم الكرام الأبرار المؤمنين." },
+ ولأئمة المسلمين وعامتهم بطلب الخير لهم." },
     { roots: ["أحكام الوفاء"], reply: "الوفاء بالعهد وحفظ ود الأصدقاء وصلة المودة من شيم الكرام الأبرار الصالحين." },
     { roots: ["أحكام الضيافة"], reply: "إكرام الضيف يوم وليلة، والضيافة ثلاثة أيام، وما زاد فهو صدقة تؤجر عليها." },
     { roots: ["أحكام صلة الرحم"], reply: "ليس الواصل بالمكافئ، بل الواصل الذي إذا قطعت رحمه وصلها بالعفو والصفح." },
@@ -338,6 +350,28 @@ const chatKnowledge=[
     {roots:["زكاة"],reply:"تجب الزكاة إذا بلغ النصاب وحال الحول 2.5%."}
 ];
 
+async function translateText(text){
+  try{
+    // detect: ترجم ... إلى en/fr/ar  OR translate ... to ...
+    let m=text.match(/ترجم(?:ة)?\s*[:：]?\s*(.+?)\s+إلى\s+(\w+)/i);
+    let q, target;
+    if(m){ q=m[1].trim(); target=m[2].trim().toLowerCase(); }
+    else {
+      m=text.match(/translate\s*[:：]?\s*(.+?)\s+to\s+(\w+)/i);
+      if(m){ q=m[1].trim(); target=m[2].trim().toLowerCase(); }
+      else return null;
+    }
+    const map={ar:"ar",arabic:"ar",عربي:"ar",العربية:"ar",en:"en",english:"en",انجليزي:"en",الإنجليزية:"en",fr:"fr",french:"fr",فرنسي:"fr",الفرنسية:"fr",es:"es",de:"de",tr:"tr",ru:"ru"};
+    const tgt=map[target]||target.slice(0,2);
+    // auto source
+    const res=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(q)}&langpair=aut|${tgt}`);
+    const d=await res.json();
+    const out=d?.responseData?.translatedText;
+    if(out && out.length>0) return `🌐 الترجمة:\n«${q}»\n→ (${tgt}) «${out}»`;
+  }catch(e){}
+  return null;
+}
+
 async function processMessage(text){
   if(!text)text=userInput.value.trim();if(!text)return;
   const check=canSendMessage();if(!check.allowed){const until=check.until;const diff=until-Date.now();const h=Math.floor(diff/3600000);const m=Math.floor((diff%3600000)/60000);const msg=`<b>${t.blockedTitle}</b><br><br>${t.blockedMsg.replace("{t}",check.limit)}<br><br>${t.waitTime.replace("{h}",h).replace("{m}",m)}<br><br><a href="subscription.html" style="color:#facc15">${t.subscribeNow}</a>`;appendMessage(msg,"blocked",false);updateLimitUI();return;}
@@ -365,6 +399,17 @@ async function processMessage(text){
     const html=`<div>🎬 <b>الوصف:</b> ${prompt}</div><video src="${videoUrl}" controls autoplay loop style="width:100%;border-radius:12px;margin-top:8px"></video><br><a href="${videoUrl}" target="_blank" style="display:inline-block;margin-top:6px;padding:4px 8px;border-radius:8px;background:#facc15;color:#111;text-decoration:none;font-size:11px">مشاهدة وتحميل</a>`;
     appendMessage("", "ai", true, "Pollinations Video Engine", html);
     if(lastVoiceInput){speakText("تم إنشاء الفيديو بنجاح");lastVoiceInput=false;}
+    return;
+  }
+
+  // ترجمة حقيقية
+  if(/ترجم|translate/i.test(text)){
+    appendMessage(text,"user");userInput.value="";incrementCount();updateLimitUI();updateSendIcon();
+    appendMessage("جاري الترجمة...","ai",false);
+    const tr=await translateText(text);
+    const last=chatContainer.lastChild;if(last&&last.textContent==="جاري الترجمة...")last.remove();
+    appendMessage(tr||"تعذر تحميل الإجابة","ai",true,tr?"MyMemory Translate":null);
+    if(lastVoiceInput){speakText(tr||"");lastVoiceInput=false;}
     return;
   }
 
