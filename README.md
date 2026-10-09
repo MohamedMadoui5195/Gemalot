@@ -5,6 +5,69 @@
 <title>Gemalot</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
 <style>
+
+.ai-splash-screen {
+        position: fixed;
+        inset: 0;
+        background: #07111f;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+        overflow: hidden;
+        transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
+      }
+      .ai-splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+      .ai-splash-glow {
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        background: radial-gradient(circle, rgba(8, 127, 255, 0.35) 0%, rgba(0, 195, 255, 0.12) 50%, transparent 75%);
+        border-radius: 50%;
+        animation: bgGlow 3s ease-in-out infinite alternate;
+      }
+      .ai-icon-container {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: introMove 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      .ai-splash-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 24px;
+        object-fit: cover;
+        box-shadow: 0 12px 35px rgba(8, 127, 255, 0.45), 0 0 20px rgba(0, 195, 255, 0.25);
+        animation: floatingGlow 2.5s ease-in-out 1.8s infinite alternate;
+      }
+      .ai-splash-text {
+        position: relative;
+        z-index: 2;
+        margin-top: 30px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #f0f7ff;
+        letter-spacing: 0.5px;
+        opacity: 0;
+        transform: translateY(18px);
+        animation: textAppear 1s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), 0 0 12px rgba(8, 127, 255, 0.3);
+      }
+      @keyframes introMove {
+        0% { opacity: 0; transform: translateY(80px) scale(0.3) rotate(-15deg); }
+        60% { opacity: 1; transform: translateY(-10px) scale(1.12) rotate(3deg); }
+        100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+      }
+      @keyframes floatingGlow {
+        0% { transform: scale(1); box-shadow: 0 12px 35px rgba(8, 127, 255, 0.45), 0 0 20px rgba(0, 195, 255, 0.25); }
+        100% { transform: scale(1.05); box-shadow: 0 18px 45px rgba(8, 127, 255, 0.65), 0 0 30px rgba(0, 195, 255, 0.5); }
+      }
+      @keyframes bgGlow { 0% { transform: scale(0.85); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0.9; } }
+      @keyframes textAppear { to { opacity: 1; transform: translateY(0); } }
+
 *{box-sizing:border-box;margin:0;padding:0}body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}
 .header{height:56px;background:linear-gradient(90deg,#facc15,#f97316,#22c55e,#3b82f6);display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:fixed;top:0;left:0;width:100%;z-index:1000}
 .header-title{font-size:18px;font-weight:bold;color:#fff}
@@ -499,6 +562,30 @@ function applyFilter(type){const imageData=ctx.getImageData(0,0,editCanvas.width
 function rotateCanvas(deg){const tmp=document.createElement("canvas");tmp.width=editCanvas.height;tmp.height=editCanvas.width;const tctx=tmp.getContext("2d");tctx.translate(tmp.width/2,tmp.height/2);tctx.rotate(deg*Math.PI/180);tctx.drawImage(editCanvas,-editCanvas.width/2,-editCanvas.height/2);editCanvas.width=tmp.width;editCanvas.height=tmp.height;ctx.drawImage(tmp,0,0);}
 function addTextOverlay(){const txt=prompt("اكتب النص:");if(!txt)return;ctx.fillStyle="#facc15";ctx.font="bold 40px Arial";ctx.fillText(txt,30,50);}
 function downloadCanvas(){const link=document.createElement("a");link.download="gemalot_edited.png";link.href=editCanvas.toDataURL();link.click();}
+
+
+      // إخفاء الشاشة وتلاشيها بعد 5 ثوانٍ
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+          var splash = document.getElementById("aiSplash");
+          if (splash) {
+            splash.classList.add("hidden");
+          }
+        }, 5000);
+      });
+
 </script>
+
+    <!-- عناصر الشاشة الترحيبية -->
+    <div class="ai-splash-screen" id="aiSplash">
+      <div class="ai-splash-glow"></div>
+      <div class="ai-icon-container">
+        <img src="icon.png" class="ai-splash-icon" alt="Alislamiah Icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><rect width=\'100\' height=\'100\' rx=\'25\' fill=\'%23087fff\'/><text x=\'50\' y=\'68\' font-size=\'55\' font-weight=\'bold\' text-anchor=\'middle\' fill=\'white\'>★</text></svg>'">
+      </div>
+      <div class="ai-splash-text">كيف يمكنني مساعدتك</div>
+    </div>
+
+    <!-- باقي محتوى ملف index.html الخاص بك يبدأ هنا -->
+
 </body>
 </html>
