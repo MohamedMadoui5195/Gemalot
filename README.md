@@ -411,6 +411,15 @@ const chatKnowledge=[
       roots: ["من الذي صنعك", "من هو مطورك", "المدير العام لشبكة الإسلامية", "من طورك", "من صنعك"], 
       reply: "أنا نموذج ذكاء اصطناعي نصي تم تطويري بواسطة شبكة Alislamiah.\nمطوري هو المدير العام لشبكة الإسلامية الرقمية (The General Director of Alislamiah Digital Network)." 
     },
+    { 
+      roots: ["Eisen mail", "ماهو Eisen mail", "Alislamiah mail", "بريد ايسن", "بريد الإسلامية"], 
+      reply: "Eisen Mail هو تطبيق بريد إلكتروني جديد تم تطويره بواسطة Eisen التابعة لشبكة Alislamiah." 
+    },
+    { 
+      roots: ["Eisen mail", "ماهو Eisen mail", "Alislamiah mail", "بريد ايسن", "بريد الإسلامية"], 
+      reply: "Eisen Mail هو تطبيق بريد إلكتروني جديد تم تطويره بواسطة Eisen التابعة لشبكة Alislamiah." 
+    },
+
 
 
 {roots:["Gemalot", "Gemalot AI", "جيمايلوت", "من أنت", "من انت"],reply:"Gemalot هو مساعدك الذكي الذاتي، تم تطويري بواسطة شبكة Alislamiah لخدمتك وإجابة استفساراتك."}
