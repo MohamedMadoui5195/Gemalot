@@ -470,21 +470,31 @@ function downloadCanvas(){const link=document.createElement("a");link.download="
 
 // === إصلاح شاشة الترحيب - تختفي بعد 5 ثواني ===
 document.addEventListener("DOMContentLoaded", function () {
-  setTimeout(function () {
-    var splash = document.getElementById("aiSplash");
-    if (splash) {
-      splash.classList.add("hidden");
-      // إزالة نهائية من DOM بعد انتهاء الأنيميشن
-      setTimeout(function(){ 
-        splash.style.display = "none"; 
-        splash.remove();
-      }, 900);
-    }
-  }, 5000);
+    setTimeout(function () {
+        var splash = document.getElementById("aiSplash");
+        if (splash) {
+            splash.classList.add("hidden");
+            // إزالة نهائية من DOM بعد انتهاء الأنيميشن
+            setTimeout(function () {
+                splash.style.display = "none";
+                splash.remove();
+            }, 900);
+        }
+    }, 5000);
 });
-// إخفاء عند النقر عليها أيضا (اختياري)
-document.getElementById("aiSplash")?.addEventListener("click", function(){
-  this.classList.add("hidden");
-  setTimeout(()=>{ this.style.display="none"; this.remove(); }, 800);
-});
+
+// إخفاء عند النقر عليها أيضاً (اختياري)
+var splashClick = document.getElementById("aiSplash");
+if (splashClick) {
+    splashClick.addEventListener("click", function () {
+        this.classList.add("hidden");
+        setTimeout(() => {
+            this.style.display = "none";
+            this.remove();
+        }, 800);
+    });
+}
 </script>
+
+</body>
+</html>
