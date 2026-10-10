@@ -6,67 +6,114 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
 <style>
 
+/* حاوية الشاشة الترحيبية */
 .ai-splash-screen {
-        position: fixed;
-        inset: 0;
-        background: #07111f;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 99999;
-        overflow: hidden;
-        transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
-      }
-      .ai-splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-      .ai-splash-glow {
-        position: absolute;
-        width: 280px;
-        height: 280px;
-        background: radial-gradient(circle, rgba(8, 127, 255, 0.35) 0%, rgba(0, 195, 255, 0.12) 50%, transparent 75%);
-        border-radius: 50%;
-        animation: bgGlow 3s ease-in-out infinite alternate;
-      }
-      .ai-icon-container {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        animation: introMove 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      }
-      .ai-splash-icon {
-        width: 100px;
-        height: 100px;
-        border-radius: 24px;
-        object-fit: cover;
-        box-shadow: 0 12px 35px rgba(8, 127, 255, 0.45), 0 0 20px rgba(0, 195, 255, 0.25);
-        animation: floatingGlow 2.5s ease-in-out 1.8s infinite alternate;
-      }
-      .ai-splash-text {
-        position: relative;
-        z-index: 2;
-        margin-top: 30px;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #f0f7ff;
-        letter-spacing: 0.5px;
-        opacity: 0;
-        transform: translateY(18px);
-        animation: textAppear 1s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
-        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), 0 0 12px rgba(8, 127, 255, 0.3);
-      }
-      @keyframes introMove {
-        0% { opacity: 0; transform: translateY(80px) scale(0.3) rotate(-15deg); }
-        60% { opacity: 1; transform: translateY(-10px) scale(1.12) rotate(3deg); }
-        100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
-      }
-      @keyframes floatingGlow {
-        0% { transform: scale(1); box-shadow: 0 12px 35px rgba(8, 127, 255, 0.45), 0 0 20px rgba(0, 195, 255, 0.25); }
-        100% { transform: scale(1.05); box-shadow: 0 18px 45px rgba(8, 127, 255, 0.65), 0 0 30px rgba(0, 195, 255, 0.5); }
-      }
-      @keyframes bgGlow { 0% { transform: scale(0.85); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0.9; } }
-      @keyframes textAppear { to { opacity: 1; transform: translateY(0); } }
+  position: fixed;
+  inset: 0;
+  background: #07111f;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  overflow: hidden;
+  perspective: 1000px;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s ease;
+}
+
+.ai-splash-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* توهج خلفي */
+.ai-splash-glow {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(8, 127, 255, 0.35) 0%, rgba(0, 195, 255, 0.12) 50%, transparent 75%);
+  border-radius: 50%;
+  animation: bgGlow 3s ease-in-out infinite alternate;
+}
+
+/* حاوية الحركة ثلاثية الأبعاد */
+.ai-icon-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  animation: flipAndScale 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* صورة icon.png */
+.ai-splash-icon {
+  width: 110px;
+  height: 110px;
+  border-radius: 26px;
+  object-fit: cover;
+  box-shadow: 0 12px 35px rgba(8, 127, 255, 0.45), 0 0 20px rgba(0, 195, 255, 0.25);
+  animation: floatingGlow 2.5s ease-in-out 2s infinite alternate;
+}
+
+/* العبارة "كيف يمكنني مساعدتك" */
+.ai-splash-text {
+  position: relative;
+  z-index: 2;
+  margin-top: 30px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f0f7ff;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: textAppear 0.8s ease-out 1.5s forwards;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), 0 0 12px rgba(8, 127, 255, 0.3);
+}
+
+/* حركة التغليب والدوران ثلاثي الأبعاد (Flip 3D) */
+@keyframes flipAndScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotateY(180deg) rotateX(45deg) translateY(100px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25) rotateY(360deg) rotateX(-15deg) translateY(-15px);
+  }
+  75% {
+    transform: scale(0.95) rotateY(540deg) rotateX(5deg) translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(720deg) rotateX(0deg) translateY(0);
+  }
+}
+
+@keyframes floatingGlow {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 12px 35px rgba(8, 127, 255, 0.45), 0 0 20px rgba(0, 195, 255, 0.25);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0 18px 45px rgba(8, 127, 255, 0.65), 0 0 30px rgba(0, 195, 255, 0.5);
+  }
+}
+
+@keyframes bgGlow {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 0.9; }
+}
+
+@keyframes textAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 *{box-sizing:border-box;margin:0;padding:0}body{background:#0b0f19;color:#fff;font-family:Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}
 .header{height:56px;background:linear-gradient(90deg,#facc15,#f97316,#22c55e,#3b82f6);display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:fixed;top:0;left:0;width:100%;z-index:1000}
